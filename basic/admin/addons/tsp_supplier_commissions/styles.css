@@ -1,0 +1,7 @@
+#menu li ul li.tspsc_suppliers a, #menu li.active ul li.tspsc_suppliers a {
+	background: url(images/icons/menu/suppliers.png) 11px 10px no-repeat;
+}
+
+#menu li ul li.tspsc_supplier_commissions a, #menu li.active ul li.tspsc_supplier_commissions a {
+	background: url(images/icons/menu/supplier_commissions.png) 11px 10px no-repeat;
+}
