@@ -1,4 +1,3 @@
-{{TOC}}
 = Supplier Commissions (CS-Cart Addon) 1.0 =
 
 Supplier Commissions for CS-Cart allows you to add commissions to supplier products in the store and allow you to monitor the commissions in the admin area (Requires CS-Cart Professional 3.04 and higher and PayPal Pro with Mass Pay turned on).
@@ -9,7 +8,7 @@ Supplier Commissions for CS-Cart allows you to add commissions to supplier produ
 * Suppliers can choose the commission they receive (reflected in price of membership)
 * Suppliers are notified whenever their products are sold
 For up-to-date installation and setup notes, visit the FAQ:
-[http://lab.thesoftwarepeople.com/tracker/wiki/cscart-sca-MainPage]
+[http://lab.thesoftwarepeople.com/tracker/wiki/Supplier+Commissions+for+CS-Cart]
 
 == GENERAL INSTALLATION NOTES ==
 * Download from repository
@@ -137,5 +136,3 @@ If you find any issues, please report them in the issue tracker on our website:
 Copyright 2013 The Software People, LLC
 
 Software is available under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License; additional terms may apply. See [http://creativecommons.org/licenses/by-nc-nd/3.0/ Terms of Use] for details.
-
-[[Category:TheLab:Software]][[Category:TheLab:Software:Documentation]][[Category:TheLab:Software:CSCartAddons]]

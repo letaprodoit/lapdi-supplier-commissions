@@ -82,7 +82,7 @@
 					<item id="pay_automatically">
 						<name>Pay Suppliers Automatically</name>
 						<type>selectbox</type>
-						<default_value>Y</default_value>
+						<default_value>N</default_value>
 						<variants>
 							<item id="N">
 								<name>No</name>

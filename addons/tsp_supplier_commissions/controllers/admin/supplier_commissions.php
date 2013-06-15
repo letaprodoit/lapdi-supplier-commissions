@@ -5,9 +5,9 @@
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	supplier_comissions.post.php
  * @version		1.0.0
- * @author		Sharron Denice, The Software People, LLC on 2013/02/09
+ * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
- * @license		APACHE v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+ * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
  * @brief		Dispatch for addon
  * 
  */
@@ -56,14 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 				$cache_file = 'supplier_commissions_' . md5(uniqid(rand()));
 
-				if (fn_put_contents(DIR_COMPILED . $cache_file, serialize($list_commissions))) 
+				fn_mkdir(DIR_CACHE_MISC . 'tsp_supplier_commissions/');
+				if (fn_put_contents(DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $cache_file, serialize($list_commissions))) 
 				{
 					return array(CONTROLLER_STATUS_OK, "supplier_commissions.batch_process_commissions?cache_file=$cache_file");
 				}//endif
 				else 
 				{
 					$msg = fn_get_lang_var('cannot_write_file');
-					$msg = str_replace('[file]', DIR_COMPILED . $cache_file, $msg);
+					$msg = str_replace('[file]', DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $cache_file, $msg);
 					fn_set_notification('E', fn_get_lang_var('error'), $msg);
 				}//endelse
 			}//endif
@@ -145,7 +146,7 @@ elseif ($mode == 'delete')
 }//endelseif
 elseif ($mode == 'batch_process_commissions' && !empty($_REQUEST['cache_file'])) 
 {
-	$data = fn_get_contents(DIR_COMPILED . $_REQUEST['cache_file']);
+	$data = fn_get_contents(DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $_REQUEST['cache_file']);
 	if (!empty($data)) 
 	{
 		$data = @unserialize($data);
@@ -154,7 +155,7 @@ elseif ($mode == 'batch_process_commissions' && !empty($_REQUEST['cache_file']))
 	if (is_array($data)) 
 	{	
 		list($complete, $msg) = fn_tspsc_masspay_commissions($data);
-		fn_rm(DIR_COMPILED . $_REQUEST['cache_file']);
+		fn_rm(DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $_REQUEST['cache_file']);
 
 		if (!$complete) 
 		{
@@ -203,14 +204,15 @@ elseif ($mode == 'process_commission')
 
 		$cache_file = 'supplier_commissions_' . md5(uniqid(rand()));
 
-		if (fn_put_contents(DIR_COMPILED . $cache_file, serialize($list_commissions))) 
+		fn_mkdir(DIR_CACHE_MISC . 'tsp_supplier_commissions/');
+		if (fn_put_contents(DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $cache_file, serialize($list_commissions))) 
 		{
 			return array(CONTROLLER_STATUS_OK, "supplier_commissions.batch_process_commissions?cache_file=$cache_file");
 		}//endif
 		else 
 		{
 			$msg = fn_get_lang_var('cannot_write_file');
-			$msg = str_replace('[file]', DIR_COMPILED . $cache_file, $msg);
+			$msg = str_replace('[file]', DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $cache_file, $msg);
 			fn_set_notification('E', fn_get_lang_var('error'), $msg);
 		}//endelse
 	}//endif
