@@ -1,8 +1,8 @@
 <?php
 /*
- * TSP Appointments for CS-Cart
+ * TSP Supplier Commissions CS-Cart Addon
  *
- * @package		TSP Appointments for CS-Cart
+ * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	install.php
  * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/02/09
@@ -39,13 +39,9 @@ else
 	shell_exec( " cp -R -v -a $source_loc/$theme_backend_dir/templates/addons/$addon_name $target_loc/$theme_backend_dir/templates/addons/ " );
 
 	// Copy files from theme frontend directory to the target frontend directory
-	shell_exec( " cp -R -v -a $source_loc/$theme_frontend_dir/css/addons/$addon_name $target_loc/$theme_frontend_dir/css/addons/ " );
 	shell_exec( " cp -R -v -a $source_loc/$theme_frontend_dir/mail/templates/addons/$addon_name $target_loc/$theme_frontend_dir/mail/templates/addons/ " );
-	shell_exec( " cp -R -v -a $source_loc/$theme_frontend_dir/templates/addons/$addon_name $target_loc/$theme_frontend_dir/templates/addons/ " );
 
 	// Copy files from theme frontend directory to the target var/ directory
-	shell_exec( " cp -R -v -a $source_loc/$theme_var_dir/css/addons/$addon_name $target_loc/$theme_var_dir/css/addons/ " );
 	shell_exec( " cp -R -v -a $source_loc/$theme_var_dir/mail/templates/addons/$addon_name $target_loc/$theme_var_dir/mail/templates/addons/ " );
-	shell_exec( " cp -R -v -a $source_loc/$theme_var_dir/templates/addons/$addon_name $target_loc/$theme_var_dir/templates/addons/ " );
 }//end else
 ?>

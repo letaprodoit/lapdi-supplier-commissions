@@ -12,11 +12,9 @@ For up-to-date installation and setup notes, visit the FAQ:
 
 == GENERAL INSTALLATION NOTES ==
 * Download from repository
-* Unzip the zip file
-* Open addons/ folder and copy the tsp_supplier_commissions to (your cscart install dir)/addons/
-* Open the basic/admin/addons/ folder and copy the tsp_supplier_commissions/ folder to (your cscart install dir)/var/skins_repository/basic/admin/addons/ folder
-* Open the basic/mail/addons/ folder and copy the tsp_supplier_commissions/ folder to (your cscart install dir)/var/skins_repository/basic/mail/addons/ folder
-* Copy the paypal.php file to (your cscart install dir)/
+* Unzip the zip file in the directory where CS-Cart runs
+* If the zip creates a new directory called `tsp-supplier-commissions` you will need to run the install script, else you are done
+* If `tsp-supplier-commissions` folder created by zip, Navigate to the folder. Update the $target_loc in the install.php and run its. Command: php install.php
 * Open CS-Cart Administration Control Panel
 * Navigate to Settings-> Addons
 * Find the "The Software People: Supplier Commissions" addon and click "Install"
@@ -61,7 +59,7 @@ If you are able to make a mass payment then you are already set up and you do no
 
 === Before You Begin ===
 
-The Appointments module, upon install, adds customer profile fields and product global options to the database and adds a single settings to all products.
+The Supplier Commissions addon, upon install, adds customer profile fields and product global options to the database and adds a single settings to all products.
 
 The Product->Global Options that are added include:
 * PayPal Email Address - The PayPal address the where the customer commissions will be deposited.
@@ -113,13 +111,13 @@ Now that you have the product and the plan setup, you will need to assign privil
 ** Recurring plans
 *** Click on "Add Recurring Plans" and select the plan created in the section "Create a Supplier Recurring Subscription Plan" 
 === Managing Suppliers ===
-* To display your list of suppliers, in the admin section, click on Supplier->Suppliers
-** To manually add a supplier, click on "Add Supplier"
+* To display your list of suppliers, in the admin section, click on Customers->Suppliers
+** To manually add a supplier, click on "+"(Add Supplier)
 ** To modify a supplier, click on "Edit" or click on the supplier's company name
 *** To view a supplier's products, click on "View Supplier Products"
 *** To view a supplier's orders, click on "View Supplier Orders"
 === Managing Supplier Commissions ===
-* To display your list of supplier commissions, in the admin section, click on Supplier->Supplier Commissions
+* To display your list of supplier commissions, in the admin section, click on Customer->Supplier->Supplier Commissions
 ** To view a supplier, click on "More->View"
 ** To process a single supplier commission, click on "More->Process"
 ** To process multiple supplier commissions, select the suppliers to process and click on "Process Supplier Commissions"

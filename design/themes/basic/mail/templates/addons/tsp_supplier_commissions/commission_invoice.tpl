@@ -39,7 +39,7 @@ p,ul {$ldelim}
 				<tr>
 					<td>
 						<table>
-							{include file="profiles/profile_fields_info.tpl" fields=$contact_fields title=$lang.contact_information user_data=$order_info}
+							{include file="profiles/profile_fields_info.tpl" fields=$contact_fields title=__('contact_information') user_data=$order_info}
 						</table>
 					</td>
 				</tr>
@@ -54,7 +54,7 @@ p,ul {$ldelim}
 				<tr>
 					<td>
 						<table>
-						{include file="profiles/profile_fields_info.tpl" fields=$profile_fields.B title=$lang.billing_address user_data=$order_info}
+						{include file="profiles/profile_fields_info.tpl" fields=$profile_fields.B title=__('billing_address') user_data=$order_info}
 						</table>
 					</td>
 				</tr>
@@ -63,7 +63,7 @@ p,ul {$ldelim}
 				<td width="1%">&nbsp;</td>
 				<td valign="top" width="49%">
 					<table>
-						{include file="profiles/profile_fields_info.tpl" fields=$profile_fields.S title=$lang.shipping_address user_data=$order_info}
+						{include file="profiles/profile_fields_info.tpl" fields=$profile_fields.S title=__('shipping_address') user_data=$order_info}
 					</table>
 				</td>
 			</tr>
@@ -77,25 +77,25 @@ p,ul {$ldelim}
 			<td valign="top">
 			<table cellpadding="2" cellspacing="1" border="0" width="100%" bgcolor="#000000">
 			<tr>
-				<td width="10%" align="center" bgcolor="#dddddd"><b>{$lang.sku}</b></td>
-				<td width="40%" bgcolor="#dddddd"><b>{$lang.product}</b></td>
-				<td width="10%" align="center" bgcolor="#dddddd"><b>{$lang.quantity}</b></td>
-				<td width="10%" align="center" bgcolor="#dddddd"><b>{$lang.price}</b></td>
-				<td width="10%" align="center" bgcolor="#dddddd"><b>{$lang.total}</b></td>
-				<td width="10%" align="center" bgcolor="#dddddd"><b>{$lang.discount}</b></td>
-				<td width="10%" align="center" bgcolor="#dddddd"><b>{$lang.commission}</b></td>
+				<td width="10%" align="center" bgcolor="#dddddd"><b>{__('sku')}</b></td>
+				<td width="40%" bgcolor="#dddddd"><b>{__('product')}</b></td>
+				<td width="10%" align="center" bgcolor="#dddddd"><b>{__('quantity')}</b></td>
+				<td width="10%" align="center" bgcolor="#dddddd"><b>{__('price')}</b></td>
+				<td width="10%" align="center" bgcolor="#dddddd"><b>{__('total')}</b></td>
+				<td width="10%" align="center" bgcolor="#dddddd"><b>{__('discount')}</b></td>
+				<td width="10%" align="center" bgcolor="#dddddd"><b>{__('commission')}</b></td>
 			</tr>
 			{foreach from=$order_info.items item="oi"}
 			{if $oi.company_id == $supplier_id}
 			<tr>
 				<td bgcolor="#ffffff">{$oi.product_code|default:"-"}</td>
 				<td bgcolor="#ffffff">{$oi.product}
-					{if $oi.product_options}<div style="padding-top: 1px; padding-bottom: 2px;">{include file="common_templates/options_info.tpl" product_options=$oi.product_options}</div>{/if}</td>
+					{if $oi.product_options}<div style="padding-top: 1px; padding-bottom: 2px;">{include file="common/options_info.tpl" product_options=$oi.product_options}</div>{/if}</td>
 				<td bgcolor="#ffffff" align="center">{$oi.amount}</td>
-				<td bgcolor="#ffffff" align="center">{include file="common_templates/price.tpl" value=$oi.price}</td>
-				<td bgcolor="#ffffff" align="center">{include file="common_templates/price.tpl" value=$oi.subtotal}</td>
+				<td bgcolor="#ffffff" align="center">{include file="common/price.tpl" value=$oi.price}</td>
+				<td bgcolor="#ffffff" align="center">{include file="common/price.tpl" value=$oi.subtotal}</td>
 				<td bgcolor="#ffffff" align="center">{$oi.discount} %</td>
-				<td bgcolor="#ffffff" align="center">{include file="common_templates/price.tpl" value=$oi.commission}</td>
+				<td bgcolor="#ffffff" align="center">{include file="common/price.tpl" value=$oi.commission}</td>
 			</tr>
 			{/if}
 			{/foreach}
@@ -109,8 +109,8 @@ p,ul {$ldelim}
 			<div align="right">
 			<table>
 			<tr>
-				<td align="right" nowrap="nowrap"><b>{$lang.shipping_cost}:</b>&nbsp;</td>
-				<td align="right" nowrap="nowrap">{include file="common_templates/price.tpl" value=$shipping_cost}</td>
+				<td align="right" nowrap="nowrap"><b>{__('shipping_cost')}:</b>&nbsp;</td>
+				<td align="right" nowrap="nowrap">{include file="common/price.tpl" value=$shipping_cost}</td>
 			</tr>
 			</table><br />
 			</div>

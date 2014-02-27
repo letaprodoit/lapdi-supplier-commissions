@@ -4,7 +4,7 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	supplier_comissions.post.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
@@ -12,9 +12,11 @@
  * 
  */
 
-if ( !defined('AREA') )	{ die('Access denied');	}
+if ( !defined('BOOTSTRAP') )	{ die('Access denied');	}
 
 define('DEBUG', false);
+
+use Tygh\Registry;
 
 //
 // Handle posts to dispatch
@@ -63,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				}//endif
 				else 
 				{
-					$msg = fn_get_lang_var('cannot_write_file');
+					$msg = __('cannot_write_file');
 					$msg = str_replace('[file]', DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $cache_file, $msg);
-					fn_set_notification('E', fn_get_lang_var('error'), $msg);
+					fn_set_notification('E', __('error'), $msg);
 				}//endelse
 			}//endif
 		}//endif
@@ -85,8 +87,8 @@ if ($mode == 'manage')
 
 	list($supplier_commissions, $search) = fn_tspsc_get_supplier_commissions($_REQUEST);
 
-	$view->assign('supplier_commissions', $supplier_commissions);
-	$view->assign('search', $search);
+	Registry::get('view')->assign('supplier_commissions', $supplier_commissions);
+	Registry::get('view')->assign('search', $search);
 
 	list($company_list) = fn_get_companies(array('status' => 'A'), $auth);
 
@@ -96,7 +98,7 @@ if ($mode == 'manage')
 		$_company_list[$item['company_id']] = $item['company'];
 	}//endforeach
 
-	$view->assign('company_list', $_company_list);
+	Registry::get('view')->assign('company_list', $_company_list);
 
 }//endif
 elseif ($mode == 'update' && !empty($_REQUEST['commission_id'])) 
@@ -127,11 +129,11 @@ elseif ($mode == 'update' && !empty($_REQUEST['commission_id']))
 	$commission['product_total'] = floatval($commission['product_price'] * $commission['product_quantity']);
 	
 	// [Breadcrumbs]
-	fn_add_breadcrumb(fn_get_lang_var('tspsc_supplier_commissions'), "supplier_commissions.manage.reset_view");
-	fn_add_breadcrumb(fn_get_lang_var('search_results'), "supplier_commissions.manage.last_view");
+	fn_add_breadcrumb(__('tspsc_supplier_commissions'), "supplier_commissions.manage.reset_view");
+	fn_add_breadcrumb(__('search_results'), "supplier_commissions.manage.last_view");
 	// [/Breadcrumbs]
 
-	$view->assign('commission', $commission);
+	Registry::get('view')->assign('commission', $commission);
 	
 }//endelseif
 elseif ($mode == 'delete') 
@@ -159,16 +161,16 @@ elseif ($mode == 'batch_process_commissions' && !empty($_REQUEST['cache_file']))
 
 		if (!$complete) 
 		{
-			fn_set_notification('E', fn_get_lang_var('error'), fn_get_lang_var('tspsc_commission_not_processed')."<br><b>".fn_get_lang_var('reason').":</b> ".$msg);
+			fn_set_notification('E', __('error'), __('tspsc_commission_not_processed')."<br><b>".__('reason').":</b> ".$msg);
 		}//endif
 		else 
 		{
-			fn_set_notification('N', fn_get_lang_var('notice'), fn_get_lang_var('tspsc_commission_processed'));
+			fn_set_notification('N', __('notice'), __('tspsc_commission_processed'));
 		}//endelse
 	}//endif 
 	else 
 	{
-		fn_set_notification('W', fn_get_lang_var('warning'), fn_get_lang_var('tspsc_no_commissions_to_process'));
+		fn_set_notification('W', __('warning'), __('tspsc_no_commissions_to_process'));
 	}//endelse
 
 	return array(CONTROLLER_STATUS_OK, "supplier_commissions.manage");
@@ -185,7 +187,7 @@ elseif ($mode == 'charge')
 		
 		fn_tspsc_masspay_commissions($data);
 		
-		fn_set_notification('N', fn_get_lang_var('notice'), fn_get_lang_var('tspsc_commission_charged'));
+		fn_set_notification('N', __('notice'), __('tspsc_commission_charged'));
 	}//endif
 
 	return array(CONTROLLER_STATUS_REDIRECT, "subscriptions.manage");
@@ -211,9 +213,9 @@ elseif ($mode == 'process_commission')
 		}//endif
 		else 
 		{
-			$msg = fn_get_lang_var('cannot_write_file');
+			$msg = __('cannot_write_file');
 			$msg = str_replace('[file]', DIR_CACHE_MISC . 'tsp_supplier_commissions/' . $cache_file, $msg);
-			fn_set_notification('E', fn_get_lang_var('error'), $msg);
+			fn_set_notification('E', __('error'), $msg);
 		}//endelse
 	}//endif
 

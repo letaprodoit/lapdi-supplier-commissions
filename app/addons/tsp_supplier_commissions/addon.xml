@@ -3,46 +3,43 @@
 	<id>tsp_supplier_commissions</id>
 	<name>The Software People - Supplier Commissions</name>
 	<description>The Software People (TSP) Supplier Commissions allows you to add commissions to supplier products in the store and to monitor the commissions in the admin area (Requires PayPal Pro Mass Pay). For more details visit us online at www.thesoftwarepeople.com</description>
-	<version>1.0</version>
-	<!-- Next Revision 1.1
-		- Updating product fields automatically updates profile fields (linked)
-	-->
+	<version>2.0.0</version>
 	<priority>1111000100</priority>
 	<position>0</position>
 	<status>active</status>
-	<default_language>EN</default_language>
+	<default_language>en</default_language>
 	<auto_install>PROFESSIONAL</auto_install>
 	<!-- Block for the other add-ons compatibilities descriptions -->
 	<compatibility>
-		<!-- Dependencies. These add-ons must be installed in order to install the current one; otherwise an error message will be displayed -->
-		<dependencies>recurring_billing</dependencies>
-		<!-- Conflicts. These add-ons will be automatically disabled before the current add-on installation starts and the notification will be displayed-->
+        <!-- Dependencies. These add-ons must be installed in order to install the current one; otherwise an error message will be displayed -->
+        <dependencies>suppliers</dependencies>
+	    <!-- Conflicts. These add-ons will be automatically disabled before the current add-on installation starts and the notification will be displayed-->
 		<conflicts>tags,product_configurator</conflicts>
 	</compatibility>
 	<language_variables>
-		<item lang="EN" id="tsp_supplier_commissions">The Software People - Supplier Commissions</item>	
-		<item lang="EN" id="tspsc_commission">Commission</item>
-		<item lang="EN" id="tspsc_commission_charged">Commission(s) Charged</item>
-		<item lang="EN" id="tspsc_commission_info">Commission Information</item>
-		<item lang="EN" id="tspsc_commission_not_charged">Commission(s) Not Charged</item>
-		<item lang="EN" id="tspsc_commission_not_processed">Commission(s) Not Processed</item>
-		<item lang="EN" id="tspsc_commission_processed">Commission(s) Processed</item>
-		<item lang="EN" id="tspsc_editing_supplier_commission">Editing Supplier Commission</item>
-		<item lang="EN" id="tspsc_is_supplier_membership">Supplier Membership?</item>
-		<item lang="EN" id="tspsc_no_commissions_to_process">No Commission(s) to Process</item>
-		<item lang="EN" id="tspsc_pay_selected_commissions">Pay Selected Commissions</item>
-		<item lang="EN" id="tspsc_store_earned">Store Earned</item>
-		<item lang="EN" id="tspsc_store_earnings">Store Earnings</item>
-		<item lang="EN" id="tspsc_total_earned">Total Earned</item>
-		<item lang="EN" id="tspsc_total_supplier_commissions">Total Supplier Commissions</item>
-		<item lang="EN" id="tspsc_supplier">Supplier</item>
-		<item lang="EN" id="tspsc_suppliers">Suppliers</item>
-		<item lang="EN" id="tspsc_suppliers_menu_description">Sorted list of supplier accounts registered in the store.</item>
-		<item lang="EN" id="tspsc_supplier_commissions">Supplier Commissions</item>
-		<item lang="EN" id="tspsc_supplier_commissions_menu_description">List of supplier commissions generated during purchase.</item>
-		<item lang="EN" id="tspsc_supplier_commission">Supplier Commission</item>
-		<item lang="EN" id="tspsc_view_supplier_products">View Supplier Products</item>
-		<item lang="EN" id="tspsc_view_supplier_orders">View Supplier Orders</item>
+		<item lang="en" id="tsp_supplier_commissions">The Software People - Supplier Commissions</item>	
+		<item lang="en" id="tspsc_commission">Commission</item>
+		<item lang="en" id="tspsc_commission_charged">Commission(s) Charged</item>
+		<item lang="en" id="tspsc_commission_info">Commission Information</item>
+		<item lang="en" id="tspsc_commission_not_charged">Commission(s) Not Charged</item>
+		<item lang="en" id="tspsc_commission_not_processed">Commission(s) Not Processed</item>
+		<item lang="en" id="tspsc_commission_processed">Commission(s) Processed</item>
+		<item lang="en" id="tspsc_editing_supplier_commission">Editing Supplier Commission</item>
+		<item lang="en" id="tspsc_is_supplier_membership">Supplier Membership?</item>
+		<item lang="en" id="tspsc_no_commissions_to_process">No Commission(s) to Process</item>
+		<item lang="en" id="tspsc_pay_selected_commissions">Pay Selected Commissions</item>
+		<item lang="en" id="tspsc_store_earned">Store Earned</item>
+		<item lang="en" id="tspsc_store_earnings">Store Earnings</item>
+		<item lang="en" id="tspsc_total_earned">Total Earned</item>
+		<item lang="en" id="tspsc_total_supplier_commissions">Total Supplier Commissions</item>
+		<item lang="en" id="tspsc_supplier">Supplier</item>
+		<item lang="en" id="tspsc_suppliers">Suppliers</item>
+		<item lang="en" id="tspsc_suppliers_menu_description">Sorted list of supplier accounts registered in the store.</item>
+		<item lang="en" id="tspsc_supplier_commissions">Supplier Commissions</item>
+		<item lang="en" id="tspsc_supplier_commissions_menu_description">List of supplier commissions generated during purchase.</item>
+		<item lang="en" id="tspsc_supplier_commission">Supplier Commission</item>
+		<item lang="en" id="tspsc_view_supplier_products">View Supplier Products</item>
+		<item lang="en" id="tspsc_view_supplier_orders">View Supplier Orders</item>
 	</language_variables>
 	<settings>
 		<sections>
@@ -50,8 +47,8 @@
 				<!-- Tab name in the default language -->
 				<name>Supplier Settings</name>		
 				<translations>
-					<item lang="ES" for="name">Supplier Settings</item>
-					<item lang="FR" for="name">Supplier Settings</item>
+					<item lang="es" for="name">Supplier Settings</item>
+					<item lang="fr" for="name">Supplier Settings</item>
 				</translations>
 
 				<items>
@@ -74,8 +71,8 @@
 				<!-- Tab name in the default language -->
 				<name>Payment Settings</name>		
 				<translations>
-					<item lang="ES" for="name">Payment Settings</item>
-					<item lang="FR" for="name">Payment Settings</item>
+					<item lang="es" for="name">Payment Settings</item>
+					<item lang="fr" for="name">Payment Settings</item>
 				</translations>
 
 				<items>
@@ -108,7 +105,7 @@
 					<item id="masspay_enabled">
 						<name>MassPay Enabled</name>
 						<type>selectbox</type>
-						<default_value>Y</default_value>
+						<default_value>N</default_value>
 						<variants>
 							<item id="N">
 								<name>No</name>
@@ -121,7 +118,7 @@
 					<item id="commissions_enabled">
 						<name>Commissions Enabled</name>
 						<type>selectbox</type>
-						<default_value>Y</default_value>
+						<default_value>N</default_value>
 						<variants>
 							<item id="N">
 								<name>No</name>
@@ -141,6 +138,7 @@
 		<item for="install">
 			CREATE TABLE `?:addon_tsp_supplier_commissions`	(
 					`id` mediumint(8) NOT NULL AUTO_INCREMENT,
+					`company_id` mediumint(8) NOT NULL,
 					`status` char(1) NOT NULL DEFAULT 'O',
 					`order_id` mediumint(8) NOT NULL,
 					`product_id` mediumint(8) NOT NULL,
@@ -182,10 +180,10 @@
 				PRIMARY KEY  (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8
 		</item>
-		<item table="privilege_descriptions" lang="EN" editions="PROFESSIONAL">REPLACE INTO ?:privilege_descriptions (privilege, description, lang_code, section_id) VALUES ('manage_supplier_commissions', 'Manage Supplier Commissions', 'EN', '1');</item>
-		<item editions="PROFESSIONAL">REPLACE INTO ?:privileges (privilege, is_default) VALUES ('manage_supplier_commissions', 'Y');</item>
-		<item for="uninstall" editions="PROFESSIONAL">DELETE FROM ?:privileges WHERE privilege LIKE 'manage_supplier_commissions'</item>
-		<item for="uninstall" editions="PROFESSIONAL">DELETE FROM ?:privilege_descriptions WHERE privilege LIKE 'manage_supplier_commissions'</item>
+		<item for="install" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('en','manage_supplier_commissions', 'Manage supplier commissions', 'Manage supplier commissions');</item>
+        <item for="install" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">REPLACE INTO ?:privileges (privilege, is_default, section_id) VALUES ('manage_supplier_commissions', 'Y', 'addons');</item>
+        <item for="uninstall" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">DELETE FROM ?:privileges WHERE privilege = 'manage_supplier_commissions'</item>
+        <item for="uninstall" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">DELETE FROM ?:language_values WHERE name = 'privileges.manage_supplier_commissions'</item>
 	</queries>
 	<functions>
 		<item for="install">fn_tspsc_install_product_fields</item>

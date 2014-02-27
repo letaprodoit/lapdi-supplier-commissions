@@ -4,7 +4,7 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	config.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
@@ -12,15 +12,66 @@
  * 
  */
 
-if ( !defined('AREA') )	{ die('Access denied');	}
+if ( !defined('BOOTSTRAP') )	{ die('Access denied');	}
+
+use Tygh\Registry;
 
 require_once 'lib/fn.supplier_commissions.php';
 
-Registry::set('tspsc_commission_statuses', array(
+Registry::set('tspsc_supplier_commissions_statuses_long', array(
+	'O' => array(
+		'status_id' 	=> 1,
+		'status' 		=> 'O',
+		'color_status'	=> 'O',
+		'type' 			=> 'A',
+		'is_default' 	=> 'Y',
+		'description' 	=> 'Open',
+		'email_subj' 	=> 'has been created',
+		'email_header' 	=> 'Your commission has been created successfully.',
+		'lang_code' 	=> 'en',
+	),
+	'P' => array(
+		'status_id' 	=> 2,
+		'status' 		=> 'S',
+		'color_status'	=> 'B',
+		'type' 			=> 'A',
+		'is_default' 	=> 'Y',
+		'description' 	=> 'Pending',
+		'email_subj' 	=> 'is pending',
+		'email_header' 	=> 'Your commission is pending.',
+		'lang_code' 	=> 'en',
+	),
+	'S' => array(
+		'status_id' 	=> 3,
+		'status' 		=> 'C',
+		'color_status'	=> 'P',
+		'type' 			=> 'A',
+		'is_default' 	=> 'Y',
+		'description' 	=> 'Completed',
+		'email_subj' 	=> 'has been completed',
+		'email_header' 	=> 'Your commission has been processed successfully.',
+		'lang_code' 	=> 'en',
+	),
+));
+
+Registry::set('tspsc_supplier_commissions_statuses_short', array(
 		'O' => 'Open',
 		'P' => 'Pending',
 		'S' => 'Successful'
 ));
+
+Registry::set('tspsc_supplier_commissions_status_params', array(
+	'color' => array (
+		'type' => 'color',
+		'label' => 'color'
+	),
+	'notify' => array (
+		'type' => 'checkbox',
+		'label' => 'notify_customer',
+		'default_value' => 'Y'
+	),
+));
+
 
 Registry::set('tspsc_supplier_section', 'P');
 

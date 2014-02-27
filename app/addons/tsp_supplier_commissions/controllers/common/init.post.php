@@ -4,7 +4,7 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	init.post.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
@@ -12,9 +12,9 @@
  * 
  */
 
-if ( !defined('AREA') )	{ die('Access denied');	}
+if ( !defined('BOOTSTRAP') )	{ die('Access denied');	}
 
-include 'ppsdk_include_path.inc';
+set_include_path(DIR_ROOT . '/app/addons/tsp_supplier_commissions/lib' . PATH_SEPARATOR . get_include_path());
 
 require_once 'PayPal.php';
 require_once 'PayPal/Profile/Handler/Array.php';

@@ -4,7 +4,7 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	products.post.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
@@ -13,12 +13,14 @@
  */
 
 
-if ( !defined('AREA') )	{ die('Access denied');	}
+if ( !defined('BOOTSTRAP') )	{ die('Access denied');	}
 
 if ($_SERVER['REQUEST_METHOD']	== 'POST') 
 {
 	return;
 }//endif
+
+use Tygh\Registry;
 
 $commission_id = $_REQUEST['commission_id'];
 $supplier_id = $_REQUEST['supplier_id'];
@@ -30,7 +32,7 @@ if ($mode == 'manage' && !empty($commission_id))
 {
 	$supplier_id = db_get_field("SELECT `supplier_id` FROM ?:addon_tsp_supplier_commissions WHERE `id` = ?i", $commission_id);
 
-	$product_ids = db_get_fields("SELECT DISTINCT `product_id` FROM ?:products WHERE `company_id` = ?i", $supplier_id);
+	$product_ids = db_get_fields("SELECT DISTINCT `object_id` FROM ?:supplier_links WHERE `supplier_id` = ?i AND `object_type` = ?s", $supplier_id, 'P');
 	
 	if (empty($product_ids))
 	{
@@ -42,14 +44,14 @@ if ($mode == 'manage' && !empty($commission_id))
 	list($products, $search, $product_count) = fn_get_products($params, Registry::get('settings.Appearance.admin_products_per_page'), DESCR_SL);
 	fn_gather_additional_products_data($products, array('get_icon' => true, 'get_detailed' => true, 'get_options' => false, 'get_discounts' => false));
 
-	$view->assign('products', $products);
-	$view->assign('search', $search);
-	$view->assign('product_count', $product_count);
+	Registry::get('view')->assign('products', $products);
+	Registry::get('view')->assign('search', $search);
+	Registry::get('view')->assign('product_count', $product_count);
 }//endif
 // View Supplier Products: Get products by supplier id
 elseif ($mode == 'manage' && !empty($supplier_id)) 
 {
-	$product_ids = db_get_fields("SELECT DISTINCT `product_id` FROM ?:products WHERE `company_id` = ?i", $supplier_id);
+	$product_ids = db_get_fields("SELECT DISTINCT `object_id` FROM ?:supplier_links WHERE `supplier_id` = ?i AND `object_type` = ?s", $supplier_id, 'P');
 	
 	if (empty($product_ids))
 	{
@@ -61,9 +63,9 @@ elseif ($mode == 'manage' && !empty($supplier_id))
 	list($products, $search, $product_count) = fn_get_products($params, Registry::get('settings.Appearance.admin_products_per_page'), DESCR_SL);
 	fn_gather_additional_products_data($products, array('get_icon' => true, 'get_detailed' => true, 'get_options' => false, 'get_discounts' => false));
 
-	$view->assign('products', $products);
-	$view->assign('search', $search);
-	$view->assign('product_count', $product_count);
+	Registry::get('view')->assign('products', $products);
+	Registry::get('view')->assign('search', $search);
+	Registry::get('view')->assign('product_count', $product_count);
 }//endelseif
 // View Supplier Products: Restore product addon settings
 elseif ($mode == 'update' && !empty($product_id)) 
@@ -97,7 +99,7 @@ elseif ($mode == 'update' && !empty($product_id))
 				}//endif
 
 				$product_addon_fields[] = array(
-					'title' => fn_get_lang_var($field_name),
+					'title' => __($field_name),
 					'name' => $field_name,
 					'value' => $value,
 					'icon' => $fdata['icon'],
@@ -111,7 +113,7 @@ elseif ($mode == 'update' && !empty($product_id))
 			
 			}//endforeach
 			
-			$view->assign('tspsc_product_addon_fields', $product_addon_fields);				
+			Registry::get('view')->assign('tspsc_product_addon_fields', $product_addon_fields);				
 			
 		}//endif
 	}//endif
@@ -149,7 +151,7 @@ elseif ($mode == 'add')
 			}//endif
 
 			$product_addon_fields[] = array(
-				'title' => fn_get_lang_var($field_name),
+				'title' => __($field_name),
 				'name' => $field_name,
 				'value' => $value,
 				'icon' => $fdata['icon'],
@@ -163,13 +165,13 @@ elseif ($mode == 'add')
 		
 		}//endforeach
 		
-		$view->assign('tspsc_product_addon_fields', $product_addon_fields);
+		Registry::get('view')->assign('tspsc_product_addon_fields', $product_addon_fields);
 	}//endif
 	else
 	{
 		// Set the supplier ID
-		$product_data['company_id'] = SUPPLIER_ID;
-		$view->assign('product_data', $product_data);
+		$product_data['supplier_id'] = SUPPLIER_ID;
+		Registry::get('view')->assign('product_data', $product_data);
 					
 	}//endelse
 	

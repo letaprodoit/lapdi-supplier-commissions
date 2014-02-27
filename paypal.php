@@ -4,13 +4,15 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	paypal.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/02/28
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
  * @brief		Configuraton file for addon
  * 
  */
+
+use Tygh\Registry;
 
 // STEP 1: Read POST data
  
@@ -70,8 +72,8 @@ define('AREA_NAME', 'customer');
 define('ACCOUNT_TYPE', 'customer');
 define('DEBUG', false);
 
-require dirname(__FILE__) . '/prepare.php';
 require dirname(__FILE__) . '/init.php';
+
 
 $res = "VERIFIED"; //FIX fiture out why it returns INVALID
 $steps = "";
@@ -193,7 +195,7 @@ if (strcmp ($res, "VERIFIED") == 0) {
 	
 	$data = array();
 	$data['url'] = "https://www.paypal.com";
-	$data['request'] = "http://www.thesoftwarepeople.com/paypal.php";
+	$data['request'] = "http://".$config['http_host'].$config['http_path']."/paypal.php";
 	$data['response'] = "$masspay SUCCESS: (RES) $res $steps_str(POST) ".serialize($_POST);
 	fn_log_event('requests','http', $data);
 	
@@ -204,7 +206,7 @@ if (strcmp ($res, "VERIFIED") == 0) {
 
 	$data = array();
 	$data['url'] = "https://www.paypal.com";
-	$data['request'] = "http://www.thesoftwarepeople.com/paypal.php";
+	$data['request'] = "http://".$config['http_host'].$config['http_path']."/paypal.php";
 	$data['response'] = "$masspay FAIL: (RES) $res $steps_str(POST) ".serialize($_POST);
 	fn_log_event('requests','http', $data);
 

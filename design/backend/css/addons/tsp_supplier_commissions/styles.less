@@ -1,7 +1,28 @@
+/* BEGIN: Reminder Menu */
+@supplier_commissions-path: "../media/images/addons/tsp_supplier_commissions";
+
 #menu li ul li.tspsc_suppliers a, #menu li.active ul li.tspsc_suppliers a {
-	background: url(images/icons/menu/suppliers.png) 11px 10px no-repeat;
+	background: url("@{reminder-path}/icons/menu/suppliers.png") 11px 10px no-repeat;
 }
 
 #menu li ul li.tspsc_supplier_commissions a, #menu li.active ul li.tspsc_supplier_commissions a {
-	background: url(images/icons/menu/supplier_commissions.png) 11px 10px no-repeat;
+	background: url("@{reminder-path}/icons/menu/supplier_commissions.png") 11px 10px no-repeat;
 }
+
+/* BEGIN: Supplier Commisions Manage/Update */
+#tspsc_supplier_commissions{
+    .buttons-container {
+      padding-top: 15px;
+    }
+    .search-field {
+      padding-right: 10px;
+    }
+    .form-edit .control-group {
+        margin-bottom: 5px;
+        padding: 0px;
+        .controls {
+            margin-top: 5px;
+        }
+   }
+}
+/* END: Supplier Commisions Manage/Update */

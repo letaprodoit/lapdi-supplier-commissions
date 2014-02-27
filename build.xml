@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TSP Supplier Commissions" default="copy_all" basedir=".">
+    <property name="name"  value="tsp_supplier_commissions" />
+    <property name="test_site"  value="/Users/SharronDenice/Sites/_testsites/cscart_latest" />
+    <property name="live_site"  value="/Users/SharronDenice/Sites/www.thesoftwarepeople.com" />
+ 
+    <!-- Fileset for addon files -->
+    <fileset dir="${project.basedir}/app/addons" id="addonfiles">
+        <include name="${name}/*" />
+        <include name="${name}/controllers/*" />
+        <include name="${name}/controllers/backend/*" />
+        <include name="${name}/controllers/common/*" />
+        <include name="${name}/lib/*" />
+        <include name="${name}/lib/HTTP/*" />
+        <include name="${name}/lib/HTTP/Request/*" />
+        <include name="${name}/lib/Log/*" />
+        <include name="${name}/lib/Net/*" />
+        <include name="${name}/lib/PayPal/*" />
+        <include name="${name}/lib/PayPal/cert/*" />
+        <include name="${name}/lib/PayPal/conf/*" />
+        <include name="${name}/lib/PayPal/Profile/*" />
+        <include name="${name}/lib/PayPal/Profile/Handler/*" />
+        <include name="${name}/lib/PayPal/SOAP/*" />
+        <include name="${name}/lib/PayPal/SOAP/Transport/*" />
+        <include name="${name}/lib/PayPal/SOAP/Type/*" />
+        <include name="${name}/lib/PayPal/Type/*" />
+        <include name="${name}/lib/PayPal/wsdl/*" />
+        <include name="${name}/schemas/*" />
+        <include name="${name}/schemas/menu/*" />
+        <include name="${name}/schemas/permissions/*" />
+    </fileset>
+
+    <!-- Fileset for backend files -->
+    <fileset dir="${project.basedir}/design/backend" id="backend_files">
+        <include name="css/addons/${name}/*" />
+        <include name="media/images/addons/${name}/*" />
+        <include name="media/images/addons/${name}/icons/*" />
+        <include name="media/images/addons/${name}/icons/menu/*" />
+        <include name="templates/addons/${name}/*" />
+        <include name="templates/addons/${name}/hooks/*" />
+        <include name="templates/addons/${name}/hooks/index/*" />
+        <include name="templates/addons/${name}/hooks/products/*" />
+        <include name="templates/addons/${name}/hooks/suppliers/*" />
+        <include name="templates/addons/${name}/views/*" />
+        <include name="templates/addons/${name}/views/supplier_commissions/*" />
+        <include name="templates/addons/${name}/views/supplier_commissions/components/*" />
+    </fileset>
+
+    <!-- Fileset for frontend files -->
+    <fileset dir="${project.basedir}/design/themes" id="frontend_files">
+        <include name="basic/mail/templates/addons/${name}/*" />
+   </fileset>
+
+    <!-- Fileset for frontend files -->
+    <fileset dir="${project.basedir}" id="paypal_file">
+        <include name="paypal.php" />
+   </fileset>
+    
+    <!-- Fileset for all files -->
+    <fileset dir="${project.basedir}" id="allfiles">
+        <include name="LICENSE" />
+        <include name="README.md" />
+        <include name="paypal.php" />
+        <include name="install.php" />
+        <include name="app/addons/${name}/*" />
+        <include name="app/addons/${name}/controllers/*" />
+        <include name="app/addons/${name}/controllers/backend/*" />
+        <include name="app/addons/${name}/controllers/common/*" />
+        <include name="app/addons/${name}/lib/*" />
+        <include name="app/addons/${name}/lib/HTTP/*" />
+        <include name="app/addons/${name}/lib/HTTP/Request/*" />
+        <include name="app/addons/${name}/lib/Log/*" />
+        <include name="app/addons/${name}/lib/Net/*" />
+        <include name="app/addons/${name}/lib/PayPal/*" />
+        <include name="app/addons/${name}/lib/PayPal/cert/*" />
+        <include name="app/addons/${name}/lib/PayPal/conf/*" />
+        <include name="app/addons/${name}/lib/PayPal/Profile/*" />
+        <include name="app/addons/${name}/lib/PayPal/Profile/Handler/*" />
+        <include name="app/addons/${name}/lib/PayPal/SOAP/*" />
+        <include name="app/addons/${name}/lib/PayPal/SOAP/Transport/*" />
+        <include name="app/addons/${name}/lib/PayPal/SOAP/Type/*" />
+        <include name="app/addons/${name}/lib/PayPal/Type/*" />
+        <include name="app/addons/${name}/lib/PayPal/wsdl/*" />
+        <include name="app/addons/${name}/schemas/*" />
+        <include name="app/addons/${name}/schemas/menu/*" />
+        <include name="app/addons/${name}/schemas/permissions/*" />
+        
+        <include name="design/backend/css/addons/${name}/*" />
+        <include name="design/backend/media/images/addons/${name}/*" />
+        <include name="design/backend/media/images/addons/${name}/icons/*" />
+        <include name="design/backend/media/images/addons/${name}/icons/menu/*" />
+        <include name="design/backend/templates/addons/${name}/*" />
+        <include name="design/backend/templates/addons/${name}/hooks/*" />
+        <include name="design/backend/templates/addons/${name}/hooks/index/*" />
+        <include name="design/backend/templates/addons/${name}/hooks/products/*" />
+        <include name="design/backend/templates/addons/${name}/hooks/suppliers/*" />
+        <include name="design/backend/templates/addons/${name}/views/*" />
+        <include name="design/backend/templates/addons/${name}/views/supplier_commissions/*" />
+        <include name="design/backend/templates/addons/${name}/views/supplier_commissions/components/*" />
+
+        <include name="design/themes/basic/mail/templates/addons/${name}/*" />
+
+        <include name="var/themes_repository/basic/mail/templates/addons/${name}/*" />
+    </fileset>
+
+    <!-- copy_all Target -->
+    <target name="copy_all" description="copy all files target">
+        <!-- Copying FRONTENT to VAR -->
+        <echo message="Copying FRONTEND to VAR..." />
+        <copy todir="${project.basedir}/var/themes_repository">
+            <fileset refid="frontend_files" />
+        </copy>
+
+        <!-- Copying to TEST project -->
+        <echo message="Copying ADDON files to TEST project..." />
+        <copy todir="${test_site}/app/addons">
+            <fileset refid="addonfiles" />
+        </copy>
+        <echo message="Copying BACKEND files to TEST project..." />
+        <copy todir="${test_site}/design/backend">
+            <fileset refid="backend_files" />
+        </copy>
+        <echo message="Copying FRONTEND files to TEST project..." />
+        <copy todir="${test_site}/design/themes">
+            <fileset refid="frontend_files" />
+        </copy>
+        <echo message="Copying FRONTEND files to var/ dir of TEST project..." />
+        <copy todir="${test_site}/var/themes_repository">
+            <fileset refid="frontend_files" />
+        </copy>
+        <echo message="Copying PAYPAL.PHP files to v/ dir of TEST project..." />
+        <copy todir="${test_site}">
+            <fileset refid="paypal_file" />
+        </copy>
+        
+        <!-- Copying to LIVE project -->
+        <echo message="Copying ADDON files to LIVE project..." />
+        <copy todir="${live_site}/app/addons">
+            <fileset refid="addonfiles" />
+        </copy>
+        <echo message="Copying BACKEND files to LIVE project..." />
+        <copy todir="${live_site}/design/backend">
+            <fileset refid="backend_files" />
+        </copy>
+        <echo message="Copying FRONTEND files to LIVE project..." />
+        <copy todir="${live_site}/design/themes">
+            <fileset refid="frontend_files" />
+        </copy>
+        <echo message="Copying FRONTEND files to var/ dir of LIVE project..." />
+        <copy todir="${live_site}/var/themes_repository">
+            <fileset refid="frontend_files" />
+        </copy>
+        <echo message="Copying PAYPAL.PHP files to v/ dir of LIVE project..." />
+        <copy todir="${live_site}">
+            <fileset refid="paypal_file" />
+        </copy>
+        
+        <!-- Creating ZIP file -->
+        <delete file="../../${name}_41x.zip" />
+        <zip destfile="../../${name}_41x.zip">
+            <fileset refid="allfiles" />
+        </zip>
+    </target>
+</project>

@@ -4,7 +4,7 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	fn.supplier_commissions.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
@@ -12,9 +12,13 @@
  * 
  */
 
-if ( !defined('AREA') )	{ die('Access denied');	}
+if ( !defined('BOOTSTRAP') )	{ die('Access denied');	}
 
 define('DEBUG', false);
+
+use Tygh\Registry;
+use Tygh\Mailer;
+use Tygh\Navigation\LastView;
 
 //
 // [Functions - Addon.xml Handlers]
@@ -25,7 +29,7 @@ define('DEBUG', false);
  * Function to install product option variants
  *
  ***********/
-function fn_tspc_install_product_option_variants ($option_id, $option_key, $tier, $max_tiers, $price_inc, $tier_inc, $sprintf = '%s')
+function fn_tspsc_install_product_option_variants ($option_id, $option_key, $tier, $max_tiers, $price_inc, $tier_inc, $sprintf = '%s')
 {
 	$mod = 0.00;
 	$pos = 0;
@@ -50,7 +54,7 @@ function fn_tspc_install_product_option_variants ($option_id, $option_key, $tier
 		$tier += $tier_inc;
 			
 	}//endfor
-}//end fn_tspc_install_product_option_variants
+}//end fn_tspsc_install_product_option_variants
 
 /***********
  *
@@ -59,78 +63,84 @@ function fn_tspc_install_product_option_variants ($option_id, $option_key, $tier
  ***********/
 function fn_tspsc_install_product_fields () 
 {	
-	// Install the global option fields
-	$company_option_id = db_query('INSERT INTO ?:product_options ?e', array('position' => 0, 'option_type' => 'I', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A', 'regexp' => ''));
-	$paypal_email_option_id = db_query('INSERT INTO ?:product_options ?e', array('position' => 5, 'option_type' => 'I', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A', 'regexp' => '[a-z0-9!#$%&'."'".'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'."'".'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?'));
-	$quantity_option_id = db_query('INSERT INTO ?:product_options ?e', array('position' => 10, 'option_type' => 'S', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A'));
-	$discount_option_id = db_query('INSERT INTO ?:product_options ?e', array('position' => 15, 'option_type' => 'S', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A'));
+	$default_option_fields = array(
+		'tspsc_product_company_field_id',
+		'tspsc_product_paypal_field_id',
+		'tspsc_product_quantity_field_id',
+		'tspsc_product_discount_field_id'
+	);
 	
-	// Store the global option fields
-	db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES 
-	('tspsc_product_company_field_id',$company_option_id),
-	('tspsc_product_paypal_field_id',$paypal_email_option_id),
-	('tspsc_product_quantity_field_id',$quantity_option_id),
-	('tspsc_product_discount_field_id',$discount_option_id)");
+	foreach ( $default_option_fields as $option_field_key )
+	{
+		// check to see if the field is already in the table (the global option already added) if it is not
+		// then add it
+		if ( !fn_tspsc_get_product_field_id($option_field_key) )
+		{
+			if ($option_field_key == 'tspsc_product_company_field_id')
+			{
+				// Install the global option fields
+				$company_option_id = db_query('INSERT INTO ?:product_options ?e', array('company_id' => 1, 'position' => 70, 'option_type' => 'I', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A', 'regexp' => ''));
+
+				// Store the global option fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_company_field_id',$company_option_id)");
 	
-	// Install descriptions
-	db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $paypal_email_option_id, 'option_name' => 'PayPal Email Address', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the email address where you would like to receive your commission payments.', 'inner_hint' => '', 'incorrect_message' => 'Invalid email address.'));
-	db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $company_option_id, 'option_name' => 'Company Name', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the name of your business.', 'inner_hint' => '', 'incorrect_message' => ''));
-	db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $quantity_option_id, 'option_name' => 'Maximum Number of Products', 'option_text' => '', 'description' => '', 'comment' => 'Select the maximum number of distinct products you would like to sell at one time in our store. Reminder: Once a product has sold all licenses you can add a new product in its place.', 'inner_hint' => '', 'incorrect_message' => ''));
-	db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $discount_option_id, 'option_name' => 'Discount (%)', 'option_text' => '', 'description' => '', 'comment' => 'Select the percentage amount that will be deducted from the price of each license you own that is sold in our store. This amount selected is what The Software People will receive for selling your license in our store.', 'inner_hint' => '', 'incorrect_message' => ''));
+				// Install descriptions
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $company_option_id, 'option_name' => 'Company Name', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the name of your business.', 'inner_hint' => '', 'incorrect_message' => ''));
+				
+			}//endif
+			elseif ($option_field_key == 'tspsc_product_paypal_field_id')
+			{
+				// Install the global option fields
+				$paypal_email_option_id = db_query('INSERT INTO ?:product_options ?e', array('company_id' => 1, 'position' => 71, 'option_type' => 'I', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A', 'regexp' => '[a-z0-9!#$%&'."'".'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'."'".'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?'));
 
-	// Insert quanity variants
-	fn_tspc_install_product_option_variants($quantity_option_id, 'tspsc_product_quantity_field_vars',
-		Registry::get('tspsc_quantity_tier_start'), 
-		Registry::get('tspsc_quantity_tier_count'), 
-		Registry::get('tspsc_quantity_price_increment_by'),
-		Registry::get('tspsc_quantity_tier_increment_by'),
-		'%d Products');
-
-	// Insert discount variants
-	fn_tspc_install_product_option_variants($discount_option_id, 'tspsc_product_discount_field_vars',
-		Registry::get('tspsc_discount_tier_start'), 
-		Registry::get('tspsc_discount_tier_count'), 
-		Registry::get('tspsc_discount_price_increment_by'),
-		Registry::get('tspsc_discount_tier_increment_by'),
-		'%0.2f');
+				// Store the global option fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_paypal_field_id',$paypal_email_option_id)");
+	
+				// Install descriptions
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $paypal_email_option_id, 'option_name' => 'PayPal Email Address', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the email address where you would like to receive your commission payments.', 'inner_hint' => '', 'incorrect_message' => 'Invalid email address.'));
+				
+			}//end elseif
+			elseif ($option_field_key == 'tspsc_product_quantity_field_id')
+			{
+				// Install the global option fields
+				$quantity_option_id = db_query('INSERT INTO ?:product_options ?e', array('company_id' => 1, 'position' => 72, 'option_type' => 'S', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A'));
+				
+				// Store the global option fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_quantity_field_id',$quantity_option_id)");
+	
+				// Install descriptions
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $quantity_option_id, 'option_name' => 'Maximum Number of Products', 'option_text' => '', 'description' => '', 'comment' => 'Select the maximum number of distinct products you would like to sell at one time in our store. Reminder: Once a product has sold all licenses you can add a new product in its place.', 'inner_hint' => '', 'incorrect_message' => ''));
+				
+				// Insert quanity variants
+				fn_tspsc_install_product_option_variants($quantity_option_id, 'tspsc_product_quantity_field_vars',
+				Registry::get('tspsc_quantity_tier_start'),
+				Registry::get('tspsc_quantity_tier_count'),
+				Registry::get('tspsc_quantity_price_increment_by'),
+				Registry::get('tspsc_quantity_tier_increment_by'),
+				'%d Products');
+			}//end elseif
+			elseif ($option_field_key == 'tspsc_product_discount_field_id')
+			{
+				// Install the global option fields
+				$discount_option_id = db_query('INSERT INTO ?:product_options ?e', array('company_id' => 1, 'position' => 73, 'option_type' => 'S', 'inventory' => 'N', 'required' => 'Y', 'status' => 'A'));
+				
+				// Store the global option fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_discount_field_id',$discount_option_id)");
+	
+				// Install descriptions
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $discount_option_id, 'option_name' => 'Discount (%)', 'option_text' => '', 'description' => '', 'comment' => 'Select the percentage amount that will be deducted from the price of each license you own that is sold in our store. This amount selected is what The Software People will receive for selling your license in our store.', 'inner_hint' => '', 'incorrect_message' => ''));
+				
+				// Insert discount variants
+				fn_tspsc_install_product_option_variants($discount_option_id, 'tspsc_product_discount_field_vars',
+				Registry::get('tspsc_discount_tier_start'),
+				Registry::get('tspsc_discount_tier_count'),
+				Registry::get('tspsc_discount_price_increment_by'),
+				Registry::get('tspsc_discount_tier_increment_by'),
+				'%0.2f');
+			}//end elseif
+		}//end if
+	}//end foreach
 }//end fn_tspsc_install_product_fields
-
-/***********
- *
- * Function to uninstall product fields metadata
- *
- ***********/
-function fn_tspsc_uninstall_product_field_metadata ()
-{
-	// Get the product options
-	$product_options = db_get_fields("SELECT `option_id` FROM ?:addon_tsp_supplier_commissions_product_field_metadata");
-	
-	if (!empty($product_options) && is_array($product_options))
-	{
-		// Delete the product options from all tables
-		foreach ($product_options as $val)
-		{
-			db_query("DELETE FROM ?:product_options WHERE `option_id` = ?i", $val);
-			db_query("DELETE FROM ?:product_options_descriptions WHERE `option_id` = ?i", $val);
-		}//endforeach
-	}//endif
-	
-	// Get the Product options variants
-	$product_option_variants = db_get_fields("SELECT `variant_id` FROM ?:addon_tsp_supplier_commissions_product_field_metadata");
-	
-	if (!empty($product_option_variants) && is_array($product_option_variants))
-	{
-		// Delete the product options variants from all tables
-		foreach ($product_option_variants as $val)
-		{
-			db_query("DELETE FROM ?:product_option_variants WHERE `variant_id` = ?i", $val);
-			db_query("DELETE FROM ?:product_option_variants_descriptions WHERE `variant_id` = ?i", $val);
-		}//endforeach
-	}//endif
-
-	// After all data removed drop the storage table
-	db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions_product_field_metadata`");
-}//end fn_tspsc_uninstall_product_field_metadata
 
 
 /***********
@@ -138,7 +148,7 @@ function fn_tspsc_uninstall_product_field_metadata ()
  * Function to install profile field values
  *
  ***********/
-function fn_tspc_install_profile_field_values ($option_id, $option_key, $tier, $max_tiers, $tier_inc, $sprintf = '%s')
+function fn_tspsc_install_profile_field_values ($option_id, $option_key, $tier, $max_tiers, $tier_inc, $sprintf = '%s')
 {
 	$pos = 0;
 	
@@ -151,16 +161,16 @@ function fn_tspc_install_profile_field_values ($option_id, $option_key, $tier, $
 			// Store the profile option field
 			db_query("INSERT INTO ?:addon_tsp_supplier_commissions_profile_field_metadata (`key`,`option_id`,`variant_id`) VALUES ('$option_key',$option_id,$object_id)");
 
-			db_query("INSERT INTO ?:profile_field_descriptions ?e", array('object_id' => $object_id, 'description' => sprintf($sprintf,$tier), 'object_type' => 'V', 'lang_code' => 'EN'));
-			db_query("INSERT INTO ?:profile_field_descriptions ?e", array('object_id' => $object_id, 'description' => sprintf($sprintf,$tier), 'object_type' => 'V', 'lang_code' => 'ES'));
-			db_query("INSERT INTO ?:profile_field_descriptions ?e", array('object_id' => $object_id, 'description' => sprintf($sprintf,$tier), 'object_type' => 'V', 'lang_code' => 'FR'));
+			db_query("INSERT INTO ?:profile_field_descriptions ?e", array('object_id' => $object_id, 'description' => sprintf($sprintf,$tier), 'object_type' => 'V', 'lang_code' => 'en'));
+			db_query("INSERT INTO ?:profile_field_descriptions ?e", array('object_id' => $object_id, 'description' => sprintf($sprintf,$tier), 'object_type' => 'V', 'lang_code' => 'es'));
+			db_query("INSERT INTO ?:profile_field_descriptions ?e", array('object_id' => $object_id, 'description' => sprintf($sprintf,$tier), 'object_type' => 'V', 'lang_code' => 'fr'));
 		}//endif
 
 		$pos += 5;
 		$tier += $tier_inc;
 		
 	}//endfor
-}//end fn_tspc_install_profile_field_values
+}//end fn_tspsc_install_profile_field_values
 
 /***********
  *
@@ -169,42 +179,79 @@ function fn_tspc_install_profile_field_values ($option_id, $option_key, $tier, $
  ***********/
 function fn_tspsc_install_profile_fields ()
 {	
-	// Install the global option fields
-	$supplier_paypal_email_id = db_query('INSERT INTO ?:profile_fields ?e', array('position' => 97, 'profile_show' => 'Y', 'field_type' => 'I', 'profile_required' => 'Y', 'section' => Registry::get('tspsc_supplier_section')));
-	$supplier_quantity_id = db_query('INSERT INTO ?:profile_fields ?e', array('position' => 98, 'profile_show' => 'Y', 'field_type' => 'S', 'profile_required' => 'Y', 'section' => Registry::get('tspsc_supplier_section')));
-	$supplier_discount_id = db_query('INSERT INTO ?:profile_fields ?e', array('position' => 99, 'profile_show' => 'Y', 'field_type' => 'S', 'profile_required' => 'Y', 'section' => Registry::get('tspsc_supplier_section')));
+	$default_option_fields = array(
+		'tspsc_supplier_paypal_field_id',
+		'tspsc_supplier_quantity_field_id',
+		'tspsc_supplier_discount_field_id',
+	);
 	
-	// Store the profile fields
-	db_query("INSERT INTO ?:addon_tsp_supplier_commissions_profile_field_metadata (`key`,`option_id`) VALUES 
-		('tspsc_supplier_paypal_field_id',$supplier_paypal_email_id),
-		('tspsc_supplier_quantity_field_id',$supplier_quantity_id),
-		('tspsc_supplier_discount_field_id',$supplier_discount_id)");
-	
-	// Install field descriptions
-	db_query("INSERT INTO ?:profile_field_descriptions (`object_id`,`description`,`object_type`,`lang_code`) VALUES 
-		($supplier_paypal_email_id,'PayPal Email Address','F','EN'),
-		($supplier_paypal_email_id,'PayPal Email Address','F','ES'),
-		($supplier_paypal_email_id,'PayPal Email Address','F','FR'),
-		($supplier_quantity_id,'Maximum Number of Products','F','EN'),
-		($supplier_quantity_id,'Número máximo de productos','F','ES'),
-		($supplier_quantity_id,'Nombre maximum de produits','F','FR'),
-		($supplier_discount_id,'Discount (%)','F','EN'),
-		($supplier_discount_id,'Descuento (%)','F','ES'),
-		($supplier_discount_id,'Fournisseur (%)','F','FR')");
-	
-	// Install field values & descriptions for tiers
-	fn_tspc_install_profile_field_values($supplier_quantity_id, 'tspsc_supplier_quantity_field_vars',
-		Registry::get('tspsc_quantity_tier_start'), 
-		Registry::get('tspsc_quantity_tier_count'), 
-		Registry::get('tspsc_quantity_tier_increment_by'),
-		'%d Products');
+	foreach ( $default_option_fields as $option_field_key )
+	{
+		// check to see if the field is already in the table (the global option already added) if it is not
+		// then add it
+		if ( !fn_tspsc_get_profile_field_id($option_field_key) )
+		{
+			if ($option_field_key == 'tspsc_supplier_paypal_field_id')
+			{
+				// Install the global option fields
+				$supplier_paypal_email_id = db_query('INSERT INTO ?:profile_fields ?e', array('field_name' => 'paypal_email', 'position' => 97, 'profile_show' => 'Y', 'field_type' => 'I', 'profile_required' => 'Y', 'section' => Registry::get('tspsc_supplier_section')));
+				
+				// Store the profile fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_profile_field_metadata (`key`,`option_id`) VALUES 
+					('tspsc_supplier_paypal_field_id',$supplier_paypal_email_id)");
+				
+				// Install field descriptions
+				db_query("INSERT INTO ?:profile_field_descriptions (`object_id`,`description`,`object_type`,`lang_code`) VALUES 
+					($supplier_paypal_email_id,'PayPal Email Address','F','en'),
+					($supplier_paypal_email_id,'PayPal Email Address','F','es'),
+					($supplier_paypal_email_id,'PayPal Email Address','F','fr')");
+			}//end if
+			elseif ($option_field_key == 'tspsc_supplier_quantity_field_id')
+			{
+				// Install the global option fields
+				$supplier_quantity_id = db_query('INSERT INTO ?:profile_fields ?e', array('field_name' => 'product_quantity', 'position' => 98, 'profile_show' => 'Y', 'field_type' => 'S', 'profile_required' => 'Y', 'section' => Registry::get('tspsc_supplier_section')));
+				
+				// Store the profile fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_profile_field_metadata (`key`,`option_id`) VALUES 
+					('tspsc_supplier_quantity_field_id',$supplier_quantity_id)");
+				
+				// Install field descriptions
+				db_query("INSERT INTO ?:profile_field_descriptions (`object_id`,`description`,`object_type`,`lang_code`) VALUES 
+					($supplier_quantity_id,'Maximum Number of Products','F','en'),
+					($supplier_quantity_id,'Número máximo de productos','F','es'),
+					($supplier_quantity_id,'Nombre maximum de produits','F','fr')");
+				
+				// Install field values & descriptions for tiers
+				fn_tspsc_install_profile_field_values($supplier_quantity_id, 'tspsc_supplier_quantity_field_vars',
+					Registry::get('tspsc_quantity_tier_start'), 
+					Registry::get('tspsc_quantity_tier_count'), 
+					Registry::get('tspsc_quantity_tier_increment_by'),
+					'%d Products');
+			}//end elseif
+			elseif ($option_field_key == 'tspsc_supplier_discount_field_id')
+			{
+				// Install the global option fields
+				$supplier_discount_id = db_query('INSERT INTO ?:profile_fields ?e', array('field_name' => 'product_discount', 'position' => 99, 'profile_show' => 'Y', 'field_type' => 'S', 'profile_required' => 'Y', 'section' => Registry::get('tspsc_supplier_section')));
+				
+				// Store the profile fields
+				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_profile_field_metadata (`key`,`option_id`) VALUES 
+					('tspsc_supplier_discount_field_id',$supplier_discount_id)");
 
-	// Install field values & descriptions for product quantity
-	fn_tspc_install_profile_field_values($supplier_discount_id, 'tspsc_supplier_discount_field_vars',
-		Registry::get('tspsc_discount_tier_start'), 
-		Registry::get('tspsc_discount_tier_count'), 
-		Registry::get('tspsc_discount_tier_increment_by'),
-		'%0.2f');
+				// Install field descriptions
+				db_query("INSERT INTO ?:profile_field_descriptions (`object_id`,`description`,`object_type`,`lang_code`) VALUES 
+					($supplier_discount_id,'Discount (%)','F','en'),
+					($supplier_discount_id,'Descuento (%)','F','es'),
+					($supplier_discount_id,'Fournisseur (%)','F','fr')");
+			
+				// Install field values & descriptions for product quantity
+				fn_tspsc_install_profile_field_values($supplier_discount_id, 'tspsc_supplier_discount_field_vars',
+					Registry::get('tspsc_discount_tier_start'), 
+					Registry::get('tspsc_discount_tier_count'), 
+					Registry::get('tspsc_discount_tier_increment_by'),
+					'%0.2f');
+			}//end elseif
+		}//end if
+	}//end foreach
 }//end fn_tspsc_install_profile_fields
 
 /***********
@@ -214,37 +261,40 @@ function fn_tspsc_install_profile_fields ()
  ***********/
 function fn_tspsc_uninstall_profile_field_metadata () 
 {
-	// Get the profile fields
-	$profile_fields = db_get_fields("SELECT `option_id` FROM ?:addon_tsp_supplier_commissions_profile_field_metadata");
-	$profile_section = Registry::get('tspsc_supplier_section');
-	
-	if (!empty($profile_fields) && is_array($profile_fields)) 
+	if (Registry::get('addons.tsp_supplier_commissions.delete_commission_data') == 'Y') 
 	{
-		// Delete the profile fields from all tables
-		foreach ($profile_fields as $val)
+		// Get the profile fields
+		$profile_fields = db_get_fields("SELECT `option_id` FROM ?:addon_tsp_supplier_commissions_profile_field_metadata");
+		$profile_section = Registry::get('tspsc_supplier_section');
+		
+		if (!empty($profile_fields) && is_array($profile_fields)) 
 		{
-			db_query("DELETE FROM ?:profile_fields WHERE `field_id` = ?i AND `section` = ?s", $val, $profile_section);
-			db_query("DELETE FROM ?:profile_field_values WHERE `field_id` = ?i", $val);
-			db_query("DELETE FROM ?:profile_field_descriptions WHERE `object_type` = 'F' AND `object_id` = ?i", $val);
-			db_query("DELETE FROM ?:profile_fields_data WHERE `field_id` = ?i AND `object_type` = ?s", $val, $profile_section);
-		}//endforeach
-	}//endif
-
-	// Get the profile field values
-	$profile_field_options = db_get_fields("SELECT `variant_id` FROM ?:addon_tsp_supplier_commissions_profile_field_metadata");
-
-	if (!empty($profile_field_options) && is_array($profile_field_options)) 
-	{
-		// Delete the profile field values from all tables
-		foreach ($profile_field_options as $val)
-		{
-			db_query("DELETE FROM ?:profile_field_values WHERE `value_id` = ?i", $val); // just to be sure to get it all
-			db_query("DELETE FROM ?:profile_field_descriptions WHERE `object_type` = 'V' AND `object_id` = ?i", $val);
-		}//endforeach
-	}//endif
+			// Delete the profile fields from all tables
+			foreach ($profile_fields as $val)
+			{
+				db_query("DELETE FROM ?:profile_fields WHERE `field_id` = ?i AND `section` = ?s", $val, $profile_section);
+				db_query("DELETE FROM ?:profile_field_values WHERE `field_id` = ?i", $val);
+				db_query("DELETE FROM ?:profile_field_descriptions WHERE `object_type` = 'F' AND `object_id` = ?i", $val);
+				db_query("DELETE FROM ?:profile_fields_data WHERE `field_id` = ?i AND `object_type` = ?s", $val, $profile_section);
+			}//endforeach
+		}//endif
 	
-	// After all data removed drop the storage table
-	db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions_profile_field_metadata`");
+		// Get the profile field values
+		$profile_field_options = db_get_fields("SELECT `variant_id` FROM ?:addon_tsp_supplier_commissions_profile_field_metadata");
+	
+		if (!empty($profile_field_options) && is_array($profile_field_options)) 
+		{
+			// Delete the profile field values from all tables
+			foreach ($profile_field_options as $val)
+			{
+				db_query("DELETE FROM ?:profile_field_values WHERE `value_id` = ?i", $val); // just to be sure to get it all
+				db_query("DELETE FROM ?:profile_field_descriptions WHERE `object_type` = 'V' AND `object_id` = ?i", $val);
+			}//endforeach
+		}//endif
+		
+		// After all data removed drop the storage table
+		db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions_profile_field_metadata`");
+	}
 }//end fn_tspsc_uninstall_profile_field_metadata
 
 /***********
@@ -254,35 +304,38 @@ function fn_tspsc_uninstall_profile_field_metadata ()
  ***********/
 function fn_tspsc_uninstall_languages ()
 {
-	$names = array(
-		'tsp_supplier_commissions',	
-		'tspsc_commission',
-		'tspsc_commission_charged',
-		'tspsc_commission_info',
-		'tspsc_commission_not_charged',
-		'tspsc_commission_not_processed',
-		'tspsc_commission_processed',
-		'tspsc_editing_supplier_commission',
-		'tspsc_is_supplier_membership',
-		'tspsc_no_commissions_to_process',
-		'tspsc_pay_selected_commissions',
-		'tspsc_store_earned',
-		'tspsc_store_earnings',
-		'tspsc_total_earned',
-		'tspsc_total_supplier_commissions',
-		'tspsc_supplier',
-		'tspsc_suppliers',
-		'tspsc_suppliers_menu_description',
-		'tspsc_supplier_commissions',
-		'tspsc_supplier_commissions_menu_description',
-		'tspsc_supplier_commission',
-		'tspsc_view_supplier_products',
-		'tspsc_view_supplier_orders'
-	);
-	
-	if (!empty($names)) 
+	if (Registry::get('addons.tsp_supplier_commissions.delete_commission_data') == 'Y') 
 	{
-		db_query("DELETE FROM ?:language_values WHERE name IN (?a)", $names);
+		$names = array(
+			'tsp_supplier_commissions',	
+			'tspsc_commission',
+			'tspsc_commission_charged',
+			'tspsc_commission_info',
+			'tspsc_commission_not_charged',
+			'tspsc_commission_not_processed',
+			'tspsc_commission_processed',
+			'tspsc_editing_supplier_commission',
+			'tspsc_is_supplier_membership',
+			'tspsc_no_commissions_to_process',
+			'tspsc_pay_selected_commissions',
+			'tspsc_store_earned',
+			'tspsc_store_earnings',
+			'tspsc_total_earned',
+			'tspsc_total_supplier_commissions',
+			'tspsc_supplier',
+			'tspsc_suppliers',
+			'tspsc_suppliers_menu_description',
+			'tspsc_supplier_commissions',
+			'tspsc_supplier_commissions_menu_description',
+			'tspsc_supplier_commission',
+			'tspsc_view_supplier_products',
+			'tspsc_view_supplier_orders'
+		);
+		
+		if (!empty($names)) 
+		{
+			db_query("DELETE FROM ?:language_values WHERE name IN (?a)", $names);
+		}//endif
 	}//endif
 }//end fn_tspsc_uninstall_languages
 
@@ -293,8 +346,51 @@ function fn_tspsc_uninstall_languages ()
  ***********/
 function fn_tspsc_uninstall_product_metadata()
 {
-	db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions_product_metadata`");
+	if (Registry::get('addons.tsp_supplier_commissions.delete_commission_data') == 'Y') 
+	{
+		db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions_product_metadata`");
+	}//endif
 }//end fn_tspsc_uninstall_product_metadata
+
+/***********
+ *
+ * Function to uninstall product fields metadata
+ *
+ ***********/
+function fn_tspsc_uninstall_product_field_metadata ()
+{
+	if (Registry::get('addons.tsp_supplier_commissions.delete_commission_data') == 'Y') 
+	{
+		// Get the product options
+		$product_options = db_get_fields("SELECT `option_id` FROM ?:addon_tsp_supplier_commissions_product_field_metadata");
+		
+		if (!empty($product_options) && is_array($product_options))
+		{
+			// Delete the product options from all tables
+			foreach ($product_options as $val)
+			{
+				db_query("DELETE FROM ?:product_options WHERE `option_id` = ?i", $val);
+				db_query("DELETE FROM ?:product_options_descriptions WHERE `option_id` = ?i", $val);
+			}//endforeach
+		}//endif
+		
+		// Get the Product options variants
+		$product_option_variants = db_get_fields("SELECT `variant_id` FROM ?:addon_tsp_supplier_commissions_product_field_metadata");
+		
+		if (!empty($product_option_variants) && is_array($product_option_variants))
+		{
+			// Delete the product options variants from all tables
+			foreach ($product_option_variants as $val)
+			{
+				db_query("DELETE FROM ?:product_option_variants WHERE `variant_id` = ?i", $val);
+				db_query("DELETE FROM ?:product_option_variants_descriptions WHERE `variant_id` = ?i", $val);
+			}//endforeach
+		}//endif
+	
+		// After all data removed drop the storage table
+		db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions_product_field_metadata`");
+	}//end if
+}//end fn_tspsc_uninstall_product_field_metadata
 
 /***********
  *
@@ -303,7 +399,6 @@ function fn_tspsc_uninstall_product_metadata()
  ***********/
 function fn_tspsc_uninstall_commission_data ()
 {
-
 	if (Registry::get('addons.tsp_supplier_commissions.delete_commission_data') == 'Y') 
 	{
 		db_query("DROP TABLE IF EXISTS `?:addon_tsp_supplier_commissions`");
@@ -316,59 +411,23 @@ function fn_tspsc_uninstall_commission_data ()
 
 /***********
  *
- * Function to change permissions on directories
+ * Function to delete commission data for a supplier	
  *
  ***********/
-function fn_tspsc_chmodr($path, $filemode) 
-{ 
-    if (!is_dir($path)) 
-    {
-        return chmod($path, $filemode); 
-    }//endif
-
-    $dh = opendir($path); 
-    while (($file = readdir($dh)) !== false) 
-    { 
-        if($file != '.' && $file != '..') 
-        { 
-            $fullpath = $path.'/'.$file; 
-            if(is_link($fullpath)) 
-            {
-                return FALSE; 
-            }//endif
-            elseif(!is_dir($fullpath) && !chmod($fullpath, $filemode)) 
-            {
-                return FALSE; 
-            }//endelseif
-            elseif(!fn_tspsc_chmodr($fullpath, $filemode)) 
-            {
-                return FALSE;
-            }//endelseif 
-        }//endif
-    }//endwhile
-
-    closedir($dh); 
-
-    if(chmod($path, $filemode)) 
-    {
-        return TRUE; 
-    }//endif
-    else 
-    {
-        return FALSE;
-    }//endelse
-    
-}//end fn_tspsc_chmodr
+function fn_tspsc_delete_supplier($supplier_id)
+{
+	fn_tspsc_delete_supplier_commissions('supplier_id', $supplier_id);
+	fn_tspsc_delete_supplier_profile_data($supplier_id);
+}//end fn_tsp_supplier_commissions_delete_company
 
 /***********
  *
  * Function to delete the supplier's profile field data
  *
  ***********/
-function fn_tspsc_delete_supplier_profile_data($company_id)
+function fn_tspsc_delete_supplier_profile_data($supplier_id)
 {
-
-	db_query("DELETE FROM ?:profile_fields_data WHERE `object_id` = ?i AND `object_type` = ?s", $company_id, Registry::get('tspsc_supplier_section'));
+	db_query("DELETE FROM ?:profile_fields_data WHERE `object_id` = ?i AND `object_type` = ?s", $supplier_id, Registry::get('tspsc_supplier_section'));
 }//end fn_tspsc_delete_supplier_profile_data
 
 /***********
@@ -392,6 +451,11 @@ function fn_tspsc_display_masspay_errors($errObj)
 	return "{$errObj->ShortMessage} ({$errObj->LongMessage})";
 }//end fn_tspsc_display_masspay_errors
 
+function fn_tspsc_find_supplier(&$supplier_data) 
+{
+	return db_get_field("SELECT `supplier_id` FROM ?:suppliers WHERE `company_id` = ?i AND `name` = ?s AND `email` = ?s AND `phone` = ?s", $supplier_data['company_id'], $supplier_data['name'], $supplier_data['email'], $supplier_data['phone']);
+}//end fn_tspsc_find_supplier
+
 /***********
  *
  * There is one (1) product field that is required for any supplier to receive a commission
@@ -401,7 +465,7 @@ function fn_tspsc_display_masspay_errors($errObj)
  ***********/
 function fn_tspsc_get_product_field_id($key)
 {
-	$field_id = -1;
+	$field_id = null;
 	
 	$table = '?:addon_tsp_supplier_commissions_product_field_metadata';
 	$table_exists = db_get_row("SHOW TABLES LIKE '$table'");
@@ -427,7 +491,7 @@ function fn_tspsc_get_product_field_id($key)
  ***********/
 function fn_tspsc_get_profile_field_id($key)
 {
-	$field_id = -1;
+	$field_id = null;
 	
 	$table = '?:addon_tsp_supplier_commissions_profile_field_metadata';
 	$table_exists = db_get_row("SHOW TABLES LIKE '$table'");
@@ -453,10 +517,10 @@ function fn_tspsc_get_profile_field_id($key)
  ***********/
 function fn_tspsc_get_paypal_pro_cc_processor($live)
 {
-	$payment_id = -1;
+	$payment_id = null;
 	
 	//get the payment processor for PayPal Pro
-	$processor_id = db_get_field("SELECT `processor_id` FROM ?:payment_processors WHERE `processor` LIKE '%PayPal Pro%' AND `processor_template` = 'cc.tpl'");
+	$processor_id = db_get_field("SELECT `processor_id` FROM ?:payment_processors WHERE `processor` LIKE '%PayPal Pro%' AND `processor_template` LIKE '%cc.tpl%'");
 	
 	if (!empty($processor_id)) 
 	{
@@ -497,29 +561,34 @@ function fn_tspsc_get_supplier_commission_field($id,$field)
 function fn_tspsc_get_supplier_commissions($params, $items_per_page = 0)
 {
 	// Init filter
-	$params = fn_init_view('supplier_commissions', $params);
+	$params = LastView::instance()->update('supplier_commissions', $params);
 
-	// Set default values to input params
-	$params['page'] = empty($params['page']) ? 1 : $params['page']; // default page is 1
+	$default_params = array (
+			'page' => 1,
+			'items_per_page' => $items_per_page,
+			'company' => Registry::get('runtime.company_id'),
+	);
+	
+	$params = array_merge($default_params, $params);
 
 	// Define fields that should be retrieved
 	$fields = array (
 		'?:addon_tsp_supplier_commissions.*',
-		'?:companies.company_id',
-		'?:companies.company',
-		'?:companies.email'
+		'?:suppliers.company_id',
+		'?:suppliers.name',
+		'?:suppliers.email'
 	);
 
 	// Define sort fields
 	$sortings = array (
-		'company_id' => "?:companies.company_id",
-		'email' => '?:companies.email',
-		'company' => "?:companies.company",
-		'discount' => "?:addon_tsp_supplier_commissions.discount",
-		'total' => "?:addon_tsp_supplier_commissions.total",
-		'total_paid' => "?:addon_tsp_supplier_commissions.total_paid",
-		'date_created' => "?:addon_tsp_supplier_commissions.date_created",
-		'status' => "?:addon_tsp_supplier_commissions.status",
+		'company_id' 	=> "?:suppliers.supplier_id",
+		'email' 		=> '?:suppliers.email',
+		'name' 			=> "?:suppliers.name",
+		'discount' 		=> "?:addon_tsp_supplier_commissions.discount",
+		'total' 		=> "?:addon_tsp_supplier_commissions.total",
+		'total_paid' 	=> "?:addon_tsp_supplier_commissions.total_paid",
+		'date_created' 	=> "?:addon_tsp_supplier_commissions.date_created",
+		'status' 		=> "?:addon_tsp_supplier_commissions.status",
 	);
 
 	$directions = array (
@@ -546,32 +615,26 @@ function fn_tspsc_get_supplier_commissions($params, $items_per_page = 0)
 
 	if (!empty($params['company'])) 
 	{
-		$condition .= db_quote(" AND ?:companies LIKE ?l", "%{$params['company']}%");
+		$condition .= db_quote(" AND ?:addon_tsp_supplier_commissions.company_id = ?i", $params['company']);
 	}//endif
-
+	
 	if (!empty($params['email'])) 
 	{
-		$condition .= db_quote(" AND ?:companies.email LIKE ?l", "%{$params['email']}%");
-	}//endif
-
-	if (!empty($params['company_id'])) 
-	{
-		$condition .= db_quote(" AND ?:companies.company_id = ?i", $params['company_id']);
-	}//endif
-
-	if (!empty($params['supplier_id'])) 
-	{
-		$condition .= db_quote(" AND ?:companies.company_id = ?i", $params['supplier_id']);
-	}//endif
-
-	if (!empty($params['commission_id'])) 
-	{
-		$condition .= db_quote(" AND ?:addon_tsp_supplier_commissions.id = ?i", $params['commission_id']);
+		$condition .= db_quote(" AND ?:suppliers.email LIKE ?l", "%{$params['email']}%");
 	}//endif
 
 	if (!empty($params['id'])) 
 	{
 		$condition .= db_quote(" AND ?:addon_tsp_supplier_commissions.id = ?i", $params['id']);
+	}//endif
+	elseif (!empty($params['supplier_id'])) 
+	{
+		$condition .= db_quote(" AND ?:addon_tsp_supplier_commissions.id = ?i", $params['supplier_id']);
+	}//endif
+	
+	if (!empty($params['commission_id'])) 
+	{
+		$condition .= db_quote(" AND ?:addon_tsp_supplier_commissions.id = ?i", $params['commission_id']);
 	}//endif
 
 	if (!empty($params['period']) && $params['period'] != 'A') 
@@ -606,18 +669,18 @@ function fn_tspsc_get_supplier_commissions($params, $items_per_page = 0)
 		$items_per_page = Registry::get('settings.Appearance.admin_elements_per_page');
 	}//endif
 
-	$total = db_get_field("SELECT COUNT(*) FROM ?:addon_tsp_supplier_commissions LEFT JOIN ?:companies ON ?:addon_tsp_supplier_commissions.supplier_id = ?:companies.company_id WHERE 1 $condition");
-	$limit = fn_paginate($params['page'], $total, $items_per_page);
+	$total = db_get_field("SELECT COUNT(*) FROM ?:addon_tsp_supplier_commissions LEFT JOIN ?:suppliers ON ?:addon_tsp_supplier_commissions.supplier_id = ?:suppliers.supplier_id WHERE 1 $condition");
+	$limit = db_paginate($params['page'], $total, $items_per_page);
 
-	$supplier_commissions = db_get_hash_array("SELECT " . implode(', ', $fields) . " FROM ?:addon_tsp_supplier_commissions LEFT JOIN ?:companies ON ?:addon_tsp_supplier_commissions.supplier_id = ?:companies.company_id WHERE 1 $condition ORDER BY $sorting $limit", 'id');
+	$supplier_commissions = db_get_hash_array("SELECT " . implode(', ', $fields) . " FROM ?:addon_tsp_supplier_commissions LEFT JOIN ?:suppliers ON ?:addon_tsp_supplier_commissions.supplier_id = ?:suppliers.supplier_id WHERE 1 $condition ORDER BY $sorting $limit", 'id');
 	
 	// Always get the paypal_email
 	foreach ($supplier_commissions as $k => $v) 
 	{
-		$supplier_commissions[$k]['paypal_email'] = fn_tspsc_get_supplier_paypal_email($v['company_id']);
+		$supplier_commissions[$k]['paypal_email'] = fn_tspsc_get_supplier_paypal_email($v['supplier_id']);
 	}//endforeach
 	
-	fn_view_process_results('supplier_commissions', $supplier_commissions, $params, $items_per_page);
+	LastView::instance()->processResults('supplier_commissions', $supplier_commissions, $params, $items_per_page);
 
 	return array($supplier_commissions, $params);
 }//end fn_tspsc_get_supplier_commissions
@@ -634,7 +697,7 @@ function fn_tspsc_get_supplier_data($supplier_id)
 		return false;
 	}//endif
 
-	$supplier = db_get_row("SELECT * FROM ?:companies WHERE `company_id` = ?i AND `status` = 'A'", $supplier_id);
+	$supplier = db_get_row("SELECT * FROM ?:suppliers WHERE `supplier_id` = ?i AND `status` = 'A'", $supplier_id);
 
 	// if a supplier was found lets add the paypal email address to the array
 	// if a paypal email is not found then make it null to alert the store
@@ -647,6 +710,27 @@ function fn_tspsc_get_supplier_data($supplier_id)
 		
 	return empty($supplier) ? false : $supplier;
 }//end fn_tspsc_get_supplier_data
+
+/***********
+ *
+* Function to get the field data for supplier
+*
+***********/
+function fn_tspsc_get_supplier_data_post(&$supplier_data)
+{
+	$supplier_id = $supplier_data['supplier_id'];
+
+	$supplier_fields = db_get_hash_array("SELECT * FROM ?:profile_fields WHERE `section` = '".Registry::get('tspsc_supplier_section')."'", 'field_name');
+	
+	foreach ($supplier_fields as $field_name => $field )
+	{
+		extract($field);
+		
+		$supplier_data['fields'][$field_name] = $supplier_fields[$field_name];
+
+	}//endforeach
+}//end fn_tspsc_get_supplier_data_post
+
 
 /***********
  *
@@ -681,17 +765,10 @@ function fn_tspsc_get_supplier_discount($supplier_id)
 	{
 		return floatval($discount);
 	}//endif
-
-	$lang_code = db_get_field("SELECT `lang_code` FROM ?:companies WHERE `company_id` = ?i", $supplier_id);
-	
-	if (empty($lang_code))
-	{
-		$lang_code = 'EN';
-	}//endif
 	
 	$discount_option = db_get_field("SELECT `value` FROM ?:profile_fields_data WHERE `object_id` = ?i AND `object_type` = ?s AND `field_id` = ?i", $supplier_id, Registry::get('tspsc_supplier_section'), Registry::get('tspsc_supplier_discount_field_id'));
 	
-	$discount = db_get_field("SELECT `description` FROM ?:profile_field_descriptions WHERE `object_id` = ?i AND `object_type` = 'V' and `lang_code` = ?s", $discount_option, $lang_code);
+	$discount = db_get_field("SELECT `description` FROM ?:profile_field_descriptions WHERE `object_id` = ?i AND `object_type` = 'V' and `lang_code` = ?s", $discount_option, CART_LANGUAGE);
 	
 	return floatval($discount);
 }//end fn_tspsc_get_supplier_discount
@@ -708,13 +785,6 @@ function fn_tspsc_get_supplier_paypal_email($supplier_id)
 	if (empty($supplier_id)) 
 	{
 		return $paypal_email;
-	}//endif
-
-	$lang_code = db_get_field("SELECT `lang_code` FROM ?:companies WHERE `company_id` = ?i", $supplier_id);
-	
-	if (empty($lang_code))
-	{
-		$lang_code = 'EN';
 	}//endif
 	
 	$paypal_email = db_get_field("SELECT `value` FROM ?:profile_fields_data WHERE `object_id` = ?i AND `object_type` = ?s AND `field_id` = ?i", $supplier_id, Registry::get('tspsc_supplier_section'), Registry::get('tspsc_supplier_paypal_field_id'));	
@@ -754,10 +824,10 @@ function fn_tspsc_masspay_commissions($commissions)
 		$sandbox = ($processor_data['params']['mode'] == 'test') ? '.sandbox' : '';
 		$environment = ($processor_data['params']['mode'] == 'test') ? 'sandbox' : 'live';
 		
-		$paypal_username = $processor_data['params']['username'];
-		$paypal_password = $processor_data['params']['password'];
-		$paypal_signature = $processor_data['params']['signature'];
-		$paypal_currency = $processor_data['params']['currency'];
+		$paypal_username 	= $processor_data['params']['username'];
+		$paypal_password 	= $processor_data['params']['password'];
+		$paypal_signature 	= $processor_data['params']['signature'];
+		$paypal_currency 	= $processor_data['params']['currency'];
 	
 		$handler = ProfileHandler_Array::getInstance(array(
 		            'username' => $paypal_username,
@@ -931,7 +1001,7 @@ function fn_tspsc_save_commissions(&$order_info)
 	
 	if (!empty($order_info) && $commissions_enabled)
 	{	
-		$products = $order_info['items'];
+		$products = $order_info['products'];
 	
 		// Only pay commission if the order has been successfully processed
 		if ($order_info['payment_info']['order_status'] == 'P') 
@@ -939,16 +1009,16 @@ function fn_tspsc_save_commissions(&$order_info)
 			foreach ($products as $prod) 
 			{			
 				// get product supplier info
-				$supplier_id = $prod['company_id'];
+				$supplier_id = $prod['supplier_id'];
 				
 				// if the product code is formated correctly and is a supplier
 				// product then get the supplier id and start storing the data
 				if (!empty($supplier_id)) 
 				{				
-					$company_info = fn_get_company_data($supplier_id, 'EN', false);
+					$supplier = !empty($supplier_id) ? fn_get_supplier_data($supplier_id) : array();
 					
 					// If the supplier was found continue
-					if (!empty($company_info)) 
+					if (!empty($supplier)) 
 					{					
 						$quantity = intval($prod['amount']);
 						$price = floatval($prod['price']);
@@ -956,17 +1026,19 @@ function fn_tspsc_save_commissions(&$order_info)
 						
 						$discount = fn_tspsc_get_supplier_discount($supplier_id);
 						$commission = floatval($total - ($total * $discount));
-											
+						$company_id = db_get_field("SELECT company_id FROM ?:products WHERE product_id = ?i", $prod['product_id']);
+						
 						$data = array (
-							'status' => 'O',
-							'order_id' => $prod['order_id'],
-							'product_id' => $prod['product_id'],
-							'supplier_id' => $supplier_id,
-							'product_price' => $price,
-							'product_quantity' => $quantity,
-							'discount' => $discount,
-							'total' => $commission,
-							'date_created' => time()
+							'status' 			=> 'O',
+							'company_id' 		=> $company_id,
+							'order_id' 			=> $prod['order_id'],
+							'product_id' 		=> $prod['product_id'],
+							'supplier_id' 		=> $supplier_id,
+							'product_price' 	=> $price,
+							'product_quantity' 	=> $quantity,
+							'discount' 			=> $discount,
+							'total' 			=> $commission,
+							'date_created' 		=> time()
 						);
 						
 						$comm_id = db_get_field("SELECT `id` FROM ?:addon_tsp_supplier_commissions WHERE `order_id` = ?i AND `product_id` = ?i AND supplier_id = ?i", $prod['order_id'], $prod['product_id'], $supplier_id);
@@ -1007,10 +1079,8 @@ function fn_tspsc_save_supplier(&$order_info)
 			$product_company_field_id = Registry::get('tspsc_product_company_field_id'); // associated with a supplier membership
 			$product_quantity_field_id = Registry::get('tspsc_product_quantity_field_id'); // associated with a supplier membership
 			$product_discount_field_id = Registry::get('tspsc_product_discount_field_id'); // associated with a supplier membership
-
-			$product_code_supplier  = Registry::get('addons.tsp_supplier_commissions.supplier_membership_product_code'); // product code for membership
 			
-			foreach ($order_info['items'] as $null => $prod) 
+			foreach ($order_info['products'] as $null => $prod) 
 			{			
 				$product_id = $prod['product_id'];
 				
@@ -1049,7 +1119,8 @@ function fn_tspsc_save_supplier(&$order_info)
 				//insert user information into company record
 				// company is stored in a table
 				$data = array(
-					'company' => $product_company_name,
+					'company_id' => $order_info['company_id'],
+					'name' => $product_company_name,
 					'address' => $order_info['b_address'],
 					'city' => $order_info['b_city'],
 					'state' => $order_info['b_state'],
@@ -1058,52 +1129,44 @@ function fn_tspsc_save_supplier(&$order_info)
 					'email' => $order_info['email'],
 					'phone' => $order_info['phone'],
 					'fax' => $order_info['fax'],
-					'request_user_id' => $order_info['user_id'],
 					'timestamp' => time()
 				);
 				
-				$company_id = $order_info['company_id'];
-				$company_exists = db_get_field("SELECT `company_id` FROM ?:companies WHERE `company_id` = ?i", $company_id);
+				$supplier_id = $order_info['supplier_id'];
+				$supplier_exists = db_get_field("SELECT `supplier_id` FROM ?:suppliers WHERE `supplier_id` = ?i", $supplier_id);
 				
-				if ($company_exists) 
+				if ($supplier_exists) 
 				{
-					db_query("REPLACE INTO ?:companies ?e WHERE `company_id` = ?i", $data, $company_id);
+					db_query("REPLACE INTO ?:suppliers ?e WHERE `supplier_id` = ?i", $data, $supplier_id);
 				}//endif
 				else
 				{
-					$company_id = db_query('INSERT INTO ?:companies ?e', $data);
-					$order_info['company_id'] = $company_id; // Update order info with company_id
+					$supplier_id = db_query('INSERT INTO ?:suppliers ?e', $data);
+					$order_info['supplier_id'] = $supplier_ids; // Update order info with company_id
 				}//endelse
 				
 				// paypal and discount or stored in profile fields
-				if (!empty($company_id)) 
+				if (!empty($supplier_id)) 
 				{
-					$user_id = $order_info['user_id'];
-					
-					//update the user account with the company id
-					db_query("UPDATE ?:users SET `company_id` = ?i AND `company` = ?s WHERE `user_id` = ?i", $company_id, $product_company_name, $user_id);
-					
 					$supplier_paypal_field_id = Registry::get('tspsc_supplier_paypal_field_id');
 					$supplier_quantity_field_id = Registry::get('tspsc_supplier_quantity_field_id');
 					$supplier_discount_field_id = Registry::get('tspsc_supplier_discount_field_id');
 					
-					$supplier_lang = db_get_field("SELECT `lang_code` FROM ?:companies WHERE `company_id` = ?i", $company_id);
-
 					// Insert paypal email address into profile field
-					fn_tspsc_insert_profile_field_data($company_id,$supplier_paypal_field_id,$product_paypal_email);
+					fn_tspsc_insert_profile_field_data($supplier_id,$supplier_paypal_field_id,$product_paypal_email);
 					
 					// For select box fields: Since the product field id is different than the profile field ID then we will need to
 					// convert the product field option id to the supplier profile field option id
 
 					// [Product Quantity Tiers]
 					$product_option_value = db_get_field("SELECT `variant_name` FROM ?:product_option_variants_descriptions WHERE `variant_id` = ?i", $product_quantity_tier);
-					$supplier_quantity_tier = db_get_field("SELECT `object_id` FROM ?:profile_field_descriptions WHERE `object_type` = 'V' AND `description` = ?s AND `lang_code` = ?s", $product_option_value, $supplier_lang);
-					fn_tspsc_insert_profile_field_data($company_id,$supplier_quantity_field_id,$supplier_quantity_tier);
+					$supplier_quantity_tier = db_get_field("SELECT `object_id` FROM ?:profile_field_descriptions WHERE `object_type` = 'V' AND `description` = ?s AND `lang_code` = ?s", $product_option_value, CART_LANGUAGE);
+					fn_tspsc_insert_profile_field_data($supplier_id,$supplier_quantity_field_id,$supplier_quantity_tier);
 					
 					// [Discount Tiers]
 					$product_option_value = db_get_field("SELECT `variant_name` FROM ?:product_option_variants_descriptions WHERE `variant_id` = ?i", $product_discount_tier);
-					$supplier_discount_tier = db_get_field("SELECT `object_id` FROM ?:profile_field_descriptions WHERE `object_type` = 'V' AND `description` = ?s AND `lang_code` = ?s", $product_option_value, $supplier_lang);
-					fn_tspsc_insert_profile_field_data($company_id,$supplier_discount_field_id,$supplier_discount_tier);
+					$supplier_discount_tier = db_get_field("SELECT `object_id` FROM ?:profile_field_descriptions WHERE `object_type` = 'V' AND `description` = ?s AND `lang_code` = ?s", $product_option_value, CART_LANGUAGE);
+					fn_tspsc_insert_profile_field_data($supplier_id,$supplier_discount_field_id,$supplier_discount_tier);
 				}//endif
 			}//endif
 			
@@ -1149,6 +1212,50 @@ function fn_tspsc_update_product_metadata($product_id, $field_name, $value) {
 		db_query("DELETE FROM ?:addon_tsp_supplier_commissions_product_metadata WHERE `product_id` = ?i AND `field_name` = ?s", $product_id, $field_name);
 	}//endelse
 }//end fn_tspsc_update_product_metadata
+
+/***********
+ *
+ * Function to save/update the field data for supplier
+ *
+ ***********/
+function fn_tspsc_update_supplier($supplier_id, &$supplier_data, $lang_code = CART_LANGUAGE) {
+
+	if (!empty($supplier_data) && !empty($supplier_id)) 
+	{			
+		$supplier_exists = db_get_field("SELECT `supplier_id` FROM ?:suppliers WHERE `supplier_id` = ?i", $supplier_id);
+		
+		$sql_opt = "INSERT";
+		
+		if ($supplier_exists) 
+		{
+			$sql_opt = "REPLACE";
+		}//endif
+		
+		$supplier_fields = db_get_hash_array("SELECT * FROM ?:profile_fields WHERE `section` = '".Registry::get('tspsc_supplier_section')."'", 'field_name');
+		
+		foreach ($supplier_data as $field_name => $value)
+		{
+			if (array_key_exists($field_name, $supplier_fields))
+			{
+				$data = array (
+						'object_type' => Registry::get('tspsc_supplier_section'),
+						'object_id' => $supplier_id,
+						'field_id' => $supplier_fields[$field_name]['field_id'],
+						'value' => $value
+				);
+				
+				if ($sql_opt == "INSERT")
+				{
+					$id = db_query("$sql_opt INTO ?:profile_fields_data ?e", $data);
+				}//end if
+				else
+				{
+					db_query("$sql_opt INTO ?:profile_fields_data ?e", $data);
+				}//end else
+			}//end if
+		}//endforeach
+	}//endif
+}//end fn_tspsc_update_supplier
 
 /***********
  *

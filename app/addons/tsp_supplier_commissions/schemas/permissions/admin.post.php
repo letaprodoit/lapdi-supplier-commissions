@@ -4,7 +4,7 @@
  *
  * @package		TSP Supplier Commissions CS-Cart Addon
  * @filename	admin.post.php
- * @version		1.0.0
+ * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
  * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
@@ -12,7 +12,9 @@
  * 
  */
 
-if ( !defined('AREA') ) { die('Access denied'); }
+if ( !defined('BOOTSTRAP') ) { die('Access denied'); }
+
+$schema = array();
 
 $schema['supplier_commissions'] = array (
 	'permissions' => 'manage_supplier_commissions',
@@ -39,4 +41,6 @@ if (!empty($supplier_id))
 	$schema['tools']['modes']['update_status']['param_permissions']['table_names']['tags'] = 'manage_supplier_commissions';
 	$schema['tools']['modes']['update_status']['param_permissions']['table_names']['product_tabs'] = 'manage_supplier_commissions';
 }//endif
+
+return $schema;
 ?>
