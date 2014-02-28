@@ -6,7 +6,7 @@
  * @filename	fn.supplier_commissions.php
  * @version		2.0.0
  * @author		Sharron Denice, The Software People, LLC on 2013/03/01
- * @copyright	Copyright © 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
+ * @copyright	Copyright ¬© 2013 The Software People, LLC (www.thesoftwarepeople.com). All rights reserved
  * @license		Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (http://creativecommons.org/licenses/by-nc-nd/3.0/)
  * @brief		Helper functions for addon
  * 
@@ -85,7 +85,10 @@ function fn_tspsc_install_product_fields ()
 				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_company_field_id',$company_option_id)");
 	
 				// Install descriptions
-				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $company_option_id, 'option_name' => 'Company Name', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the name of your business.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'en', 'option_id' => $company_option_id, 'option_name' => 'Company Name', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the name of your business.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'es', 'option_id' => $company_option_id, 'option_name' => 'nombre de compañía', 'option_text' => '', 'description' => '', 'comment' => 'Introduzca el nombre de su negocio.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'fr', 'option_id' => $company_option_id, 'option_name' => 'Nom de l\'entreprise', 'option_text' => '', 'description' => '', 'comment' => 'Entrez le nom de votre entreprise.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'el', 'option_id' => $company_option_id, 'option_name' => 'Ónoma etaireías', 'option_text' => '', 'description' => '', 'comment' => 'Eiságete to ónoma ti̱s epicheíri̱sí̱s sas.', 'inner_hint' => '', 'incorrect_message' => ''));
 				
 			}//endif
 			elseif ($option_field_key == 'tspsc_product_paypal_field_id')
@@ -97,7 +100,10 @@ function fn_tspsc_install_product_fields ()
 				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_paypal_field_id',$paypal_email_option_id)");
 	
 				// Install descriptions
-				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $paypal_email_option_id, 'option_name' => 'PayPal Email Address', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the email address where you would like to receive your commission payments.', 'inner_hint' => '', 'incorrect_message' => 'Invalid email address.'));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'en', 'option_id' => $paypal_email_option_id, 'option_name' => 'PayPal Email Address', 'option_text' => '', 'description' => '', 'comment' => 'Enter in the email address where you would like to receive your commission payments.', 'inner_hint' => '', 'incorrect_message' => 'Invalid email address.'));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'es', 'option_id' => $paypal_email_option_id, 'option_name' => 'PayPal E-mail', 'option_text' => '', 'description' => '', 'comment' => 'Introduzca la dirección de correo electrónico donde desea recibir sus pagos de comisiones.', 'inner_hint' => '', 'incorrect_message' => 'Email inválido.'));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'fr', 'option_id' => $paypal_email_option_id, 'option_name' => 'PayPal Email', 'option_text' => '', 'description' => '', 'comment' => 'Entrez l\'adresse email à laquelle vous souhaitez recevoir vos paiements de commissions.', 'inner_hint' => '', 'incorrect_message' => 'E-mail valide.'));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'el', 'option_id' => $paypal_email_option_id, 'option_name' => 'PayPal Email', 'option_text' => '', 'description' => '', 'comment' => 'Eiságete ti̱ diéf̱thynsi̱ i̱lektronikoú tachydromeíou ópou tha thélate na lávete pli̱ro̱més promi̱theió̱n sas.', 'inner_hint' => '', 'incorrect_message' => 'Mi̱ énkyro email.'));
 				
 			}//end elseif
 			elseif ($option_field_key == 'tspsc_product_quantity_field_id')
@@ -109,7 +115,10 @@ function fn_tspsc_install_product_fields ()
 				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_quantity_field_id',$quantity_option_id)");
 	
 				// Install descriptions
-				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $quantity_option_id, 'option_name' => 'Maximum Number of Products', 'option_text' => '', 'description' => '', 'comment' => 'Select the maximum number of distinct products you would like to sell at one time in our store. Reminder: Once a product has sold all licenses you can add a new product in its place.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'en', 'option_id' => $quantity_option_id, 'option_name' => 'Maximum Number of Products', 'option_text' => '', 'description' => '', 'comment' => 'Select the maximum number of distinct products you would like to sell at one time in our store. Reminder: Once a product has sold all licenses you can add a new product in its place.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'es', 'option_id' => $quantity_option_id, 'option_name' => 'Número máximo de productos', 'option_text' => '', 'description' => '', 'comment' => 'Seleccione el número máximo de productos distintos que le gustaría vender a la vez en nuestra tienda. Recordatorio: Una vez que un producto se ha vendido todas las licencias se puede añadir un nuevo producto en su lugar.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'fr', 'option_id' => $quantity_option_id, 'option_name' => 'Nombre maximum de produits', 'option_text' => '', 'description' => '', 'comment' => 'Sélectionnez le nombre maximum de produits distincts que vous souhaitez vendre à un moment dans notre magasin. Rappel: Une fois qu\'un produit a vendu toutes les licences, vous pouvez ajouter un nouveau produit à sa place.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'el', 'option_id' => $quantity_option_id, 'option_name' => 'Mégistos arithmós to̱n Proïónto̱n', 'option_text' => '', 'description' => '', 'comment' => 'Epiléxte to mégisto arithmó to̱n diakritó̱n proïónta pou tha thélate na poulí̱sete se éna chróno sto katásti̱má mas . Ypenthýmisi̱ :̱ Ótan éna proïón échei poulí̱sei óles tis ádeies boreíte na prosthésete éna néo proïón sti̱ thési̱ tou.', 'inner_hint' => '', 'incorrect_message' => ''));
 				
 				// Insert quanity variants
 				fn_tspsc_install_product_option_variants($quantity_option_id, 'tspsc_product_quantity_field_vars',
@@ -128,7 +137,10 @@ function fn_tspsc_install_product_fields ()
 				db_query("INSERT INTO ?:addon_tsp_supplier_commissions_product_field_metadata (`key`,`option_id`) VALUES ('tspsc_product_discount_field_id',$discount_option_id)");
 	
 				// Install descriptions
-				db_query('INSERT INTO ?:product_options_descriptions ?e', array('option_id' => $discount_option_id, 'option_name' => 'Discount (%)', 'option_text' => '', 'description' => '', 'comment' => 'Select the percentage amount that will be deducted from the price of each license you own that is sold in our store. This amount selected is what The Software People will receive for selling your license in our store.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'en', 'option_id' => $discount_option_id, 'option_name' => 'Discount (%)', 'option_text' => '', 'description' => '', 'comment' => 'Select the percentage amount that will be deducted from the price of each license you own that is sold in our store. This amount selected is what The Software People will receive for selling your license in our store.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'es', 'option_id' => $discount_option_id, 'option_name' => 'descuento (%)', 'option_text' => '', 'description' => '', 'comment' => 'Seleccione la cantidad de porcentaje que se descuenta del precio de cada licencia de su propiedad que se vende en nuestra tienda. Esta cantidad seleccionada es lo que van a recibir el programa del Pueblo para la venta de su licencia en nuestra tienda.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'fr', 'option_id' => $discount_option_id, 'option_name' => 'réduction (%)', 'option_text' => '', 'description' => '', 'comment' => 'Sélectionner le montant du pourcentage qui sera déduit du prix de chaque licence vous êtes le propriétaire qui est vendu dans notre magasin. Ce montant choisi est ce que le logiciel personnes recevront pour la vente de votre licence dans notre magasin.', 'inner_hint' => '', 'incorrect_message' => ''));
+				db_query('INSERT INTO ?:product_options_descriptions ?e', array('lang_code' => 'el', 'option_id' => $discount_option_id, 'option_name' => 'ékpto̱si̱ (%)', 'option_text' => '', 'description' => '', 'comment' => 'Epiléxte to posostó pou tha prépei na afaireítai apó ti̱n timí̱ ti̱s káthe ádeia pou katéchete kai pou po̱leítai sto katásti̱má mas . Af̱tó to epilegméno posó eínai af̱tó pou oi ánthro̱poi logismikó tha lávoun ádeia gia ti̱n pó̱li̱si̱ sas sto katásti̱má mas .', 'inner_hint' => '', 'incorrect_message' => ''));
 				
 				// Insert discount variants
 				fn_tspsc_install_product_option_variants($discount_option_id, 'tspsc_product_discount_field_vars',
@@ -202,8 +214,8 @@ function fn_tspsc_install_profile_fields ()
 				
 				// Install field descriptions
 				db_query("INSERT INTO ?:profile_field_descriptions (`object_id`,`description`,`object_type`,`lang_code`) VALUES 
-					($supplier_paypal_email_id,'PayPal Email Address','F','en'),
-					($supplier_paypal_email_id,'PayPal Email Address','F','es'),
+					($supplier_paypal_email_id,'PayPal Email','F','en'),
+					($supplier_paypal_email_id,'PayPal Email','F','es'),
 					($supplier_paypal_email_id,'PayPal Email Address','F','fr')");
 			}//end if
 			elseif ($option_field_key == 'tspsc_supplier_quantity_field_id')
@@ -218,7 +230,7 @@ function fn_tspsc_install_profile_fields ()
 				// Install field descriptions
 				db_query("INSERT INTO ?:profile_field_descriptions (`object_id`,`description`,`object_type`,`lang_code`) VALUES 
 					($supplier_quantity_id,'Maximum Number of Products','F','en'),
-					($supplier_quantity_id,'Número máximo de productos','F','es'),
+					($supplier_quantity_id,'N√∫mero m√°ximo de productos','F','es'),
 					($supplier_quantity_id,'Nombre maximum de produits','F','fr')");
 				
 				// Install field values & descriptions for tiers
@@ -1268,7 +1280,7 @@ function fn_tspsc_insert_profile_field_data($company_id,$field_id,$value)
 		'object_id' => $company_id,
 		'object_type' => Registry::get('tspsc_supplier_section'),
 		'field_id' => $field_id,
-		'value' => htmlentities(trim($value))
+		'value' => trim($value)
 	);
 	db_query('INSERT INTO ?:profile_fields_data ?e', $data);
 }//end fn_tspsc_insert_profile_field_data

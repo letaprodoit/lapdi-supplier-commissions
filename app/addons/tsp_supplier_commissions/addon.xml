@@ -40,6 +40,52 @@
 		<item lang="en" id="tspsc_supplier_commission">Supplier Commission</item>
 		<item lang="en" id="tspsc_view_supplier_products">View Supplier Products</item>
 		<item lang="en" id="tspsc_view_supplier_orders">View Supplier Orders</item>
+		<item lang="fr" id="tsp_supplier_commissions">Les logiciels personnes - commissions des fournisseurs</item>
+		<item lang="fr" id="tspsc_commission">Commission</item>
+		<item lang="fr" id="tspsc_commission_charged">Commission(s) Chargé</item>
+		<item lang="fr" id="tspsc_commission_info">information</item>Commission
+		<item lang="fr" id="tspsc_commission_not_charged">Commission(s) pas chargée</item>
+		<item lang="fr" id="tspsc_commission_not_processed">Commission(s) non traité</item>
+		<item lang="fr" id="tspsc_commission_processed">Commission(s) transformés</item>
+		<item lang="fr" id="tspsc_editing_supplier_commission">édition Fournisseur Commission</item>
+		<item lang="fr" id="tspsc_is_supplier_membership">adhésion fournisseurs ?</item>
+		<item lang="fr" id="tspsc_no_commissions_to_process">Non Commission(s) au processus</item>
+		<item lang="fr" id="tspsc_pay_selected_commissions">payer des commissions sélectionnés</item>
+		<item lang="fr" id="tspsc_store_earned">magasin Earned</item>
+		<item lang="fr" id="tspsc_store_earnings">magasins bénéfice</item>
+		<item lang="fr" id="tspsc_total_earned">total gagné</item>
+		<item lang="fr" id="tspsc_total_supplier_commissions">Total des commissions des fournisseurs</item>
+		<item lang="fr" id="tspsc_supplier">Fournisseur</item>
+		<item lang="fr" id="tspsc_suppliers">Fournisseurs</item>
+		<item lang="fr" id="tspsc_suppliers_menu_description">liste des comptes fournisseurs inscrits dans le magasin de classement .</item>
+		<item lang="fr" id="tspsc_supplier_commissions">commissions des fournisseurs</item>
+		<item lang="fr" id="tspsc_supplier_commissions_menu_description">Liste des commissions générées par les fournisseurs lors de l'achat .</item>
+		<item lang="fr" id="tspsc_supplier_commission">Fournisseur Commission</item>
+		<item lang="fr" id="tspsc_view_supplier_products">Voir produits de fournisseur</item>
+		<item lang="fr" id="tspsc_view_supplier_orders">Voir Fournisseur de commandes</item>		
+		<item lang="el" id="tsp_supplier_commissions">Oi ánthro̱poi Logismikó - Promí̱theies Promi̱thef̱tí̱s</item>
+		<item lang="el" id="tspsc_commission">Epitropí̱s</item>
+		<item lang="el" id="tspsc_commission_charged">Epitropí̱s(s) Chréo̱si̱</item>
+		<item lang="el" id="tspsc_commission_info">Epitropí̱ pli̱roforíes</item>
+		<item lang="el" id="tspsc_commission_not_charged">Epitropí̱s(s) Den Chréo̱si̱</item>
+		<item lang="el" id="tspsc_commission_not_processed">Epitropí̱s(s) Mi̱ metapoii̱ména</item>
+		<item lang="el" id="tspsc_commission_processed">Epitropí̱s(s) Epexergasména</item>
+		<item lang="el" id="tspsc_editing_supplier_commission">Epexergasía Promi̱thef̱tí̱s ti̱s Epitropí̱s</item>
+		<item lang="el" id="tspsc_is_supplier_membership">Promi̱thef̱tí̱s Mélous?</item>
+		<item lang="el" id="tspsc_no_commissions_to_process">ti̱s Epitropí̱s arith.(a) sti̱n diadikasía</item>
+		<item lang="el" id="tspsc_pay_selected_commissions">Pay Epilegména Promí̱theies</item>
+		<item lang="el" id="tspsc_store_earned">Katásti̱ma Dedoulev̱ména</item>
+		<item lang="el" id="tspsc_store_earnings">Katásti̱ma Kérdi̱</item>
+		<item lang="el" id="tspsc_total_earned">Sýnolo Dedoulev̱ména</item>
+		<item lang="el" id="tspsc_total_supplier_commissions">Sýnolo Epitropés Promi̱thef̱tí̱s</item>
+		<item lang="el" id="tspsc_supplier">Promi̱thef̱tí̱s</item>
+		<item lang="el" id="tspsc_suppliers">Promi̱thef̱tés</item>
+		<item lang="el" id="tspsc_suppliers_menu_description">katálogo to̱n logariasmó̱n ti̱s epicheíri̱si̱s eínai ni̱ologi̱ména sto katásti̱ma Taxinómi̱si̱ .</item>
+		<item lang="el" id="tspsc_supplier_commissions">Promí̱theies Promi̱thef̱tí̱s</item>
+		<item lang="el" id="tspsc_supplier_commissions_menu_description">Lísta to̱n promi̱theió̱n promi̱thef̱tí̱ pou di̱miourgoúntai katá ti̱ diárkeia ti̱s agorás.</item>
+		<item lang="el" id="tspsc_supplier_commission">Promi̱thef̱tí̱s ti̱s Epitropí̱s</item>
+		<item lang="el" id="tspsc_view_supplier_products">Provolí̱ Promi̱thef̱tí̱s Proïónta</item>
+		<item lang="el" id="tspsc_view_supplier_orders">Provolí̱ Promi̱thef̱tí̱s Parangelíes</item>    		
 	</language_variables>
 	<settings>
 		<sections>
@@ -47,13 +93,18 @@
 				<!-- Tab name in the default language -->
 				<name>Supplier Settings</name>		
 				<translations>
-					<item lang="es" for="name">Supplier Settings</item>
-					<item lang="fr" for="name">Supplier Settings</item>
-				</translations>
-
+					<item lang="es" for="name">Configuración del proveedor</item>
+					<item lang="fr" for="name">Réglages des fournisseurs</item>
+                    <item lang="el" for="name">Rythmíseis promi̱thef̱tí̱</item>
+   				</translations>
 				<items>
 					<item id="delete_commission_data">
 						<name>Delete Commission Data on Uninstall</name>
+		                <translations>
+		                    <item lang="es" for="name">Eliminar los datos de la Comisión sobre Desinstalar</item>
+		                    <item lang="fr" for="name">Supprimer les données de la Commission sur Désinstaller</item>
+		                    <item lang="el" for="name">Diagrafí̱ dedoméno̱n ti̱s Epitropí̱s gia ti̱n Katárgi̱si̱̱</item>
+		                </translations>						
 						<type>selectbox</type>
 						<default_value>N</default_value>
 						<variants>
@@ -71,13 +122,18 @@
 				<!-- Tab name in the default language -->
 				<name>Payment Settings</name>		
 				<translations>
-					<item lang="es" for="name">Payment Settings</item>
-					<item lang="fr" for="name">Payment Settings</item>
-				</translations>
-
+					<item lang="es" for="name">Configuración de pagos</item>
+					<item lang="fr" for="name">Paramètres de paiement</item>
+                    <item lang="el" for="name">Rythmíseis pli̱ro̱mí̱s</item>
+ 				</translations>
 				<items>
 					<item id="pay_automatically">
 						<name>Pay Suppliers Automatically</name>
+		                <translations>
+		                    <item lang="es" for="name">Preste Proveedores Automáticamente</item>
+		                    <item lang="fr" for="name">Payer les fournisseurs automatique</item>
+		                    <item lang="el" for="name">Pli̱ró̱ste Promi̱thef̱tés Af̱tómati̱</item>
+		                </translations>												
 						<type>selectbox</type>
 						<default_value>N</default_value>
 						<variants>
@@ -91,6 +147,11 @@
 					</item>
 					<item id="use_live_account">
 						<name>Use Live MassPay Account</name>
+                        <translations>
+                            <item lang="es" for="name">Utilice Cuenta MassPay vivo</item>
+                            <item lang="fr" for="name">Utilisez compte MassPay direct</item>
+                            <item lang="el" for="name">Chri̱simopoií̱ste Live Logariasmó MassPay̱</item>
+                        </translations>                                             												
 						<type>selectbox</type>
 						<default_value>N</default_value>
 						<variants>
@@ -104,6 +165,11 @@
 					</item>
 					<item id="masspay_enabled">
 						<name>MassPay Enabled</name>
+                        <translations>
+                            <item lang="es" for="name">MassPay Activado</item>
+                            <item lang="fr" for="name">MassPay Activé</item>
+                            <item lang="el" for="name">MassPay Energopoii̱méno̱</item>
+                        </translations>                                                                                             												
 						<type>selectbox</type>
 						<default_value>N</default_value>
 						<variants>
@@ -117,6 +183,11 @@
 					</item>
 					<item id="commissions_enabled">
 						<name>Commissions Enabled</name>
+                        <translations>
+                            <item lang="es" for="name">Comisiones Activado</item>
+                            <item lang="fr" for="name">commissions Activé</item>
+                            <item lang="el" for="name">promí̱theies Enabled</item>
+                        </translations>                                                                                                                                             												
 						<type>selectbox</type>
 						<default_value>N</default_value>
 						<variants>
@@ -180,11 +251,17 @@
 				PRIMARY KEY  (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8
 		</item>
-		<item for="install" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('en','manage_supplier_commissions', 'Manage supplier commissions', 'Manage supplier commissions');</item>
-        <item for="install" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">REPLACE INTO ?:privileges (privilege, is_default, section_id) VALUES ('manage_supplier_commissions', 'Y', 'addons');</item>
-        <item for="uninstall" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">DELETE FROM ?:privileges WHERE privilege = 'manage_supplier_commissions'</item>
-        <item for="uninstall" lang="en" editions="COMMUNITY,PROFESSIONAL,MULTIVENDOR,ULTIMATE">DELETE FROM ?:language_values WHERE name = 'privileges.manage_supplier_commissions'</item>
-	</queries>
+		<item for="install" lang="en">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('en','manage_supplier_commissions', 'Manage supplier commissions', 'Manage supplier commissions');</item>
+        <item for="install">REPLACE INTO ?:privileges (privilege, is_default, section_id) VALUES ('manage_supplier_commissions', 'Y', 'addons');</item>
+        <item for="uninstall">DELETE FROM ?:privileges WHERE privilege = 'manage_supplier_commissions'</item>
+        <item for="uninstall">DELETE FROM ?:language_values WHERE name = 'privileges.manage_supplier_commissions'</item>
+        <item for="install" lang="en">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('en','manage_supplier_commissions', 'Manage supplier commissions', 'Manage supplier commissions');</item>
+ 
+        <item for="install" lang="es">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('es','manage_supplier_commissions', 'Gestione comisiones de proveedores', 'Gestione comisiones de proveedores');</item>
+        <item for="install" lang="fr">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('fr','manage_supplier_commissions', 'Gérer commissions des fournisseurs', 'Gérer commissions des fournisseurs');</item>
+        <item for="install" lang="el">REPLACE INTO ?:language_values (lang_code, name, value, original_value) VALUES ('el','manage_supplier_commissions', 'Diacheiristeíte promí̱theies promi̱thef̱tí̱', 'Diacheiristeíte promí̱theies promi̱thef̱tí̱');</item>
+        
+    </queries>
 	<functions>
 		<item for="install">fn_tspsc_install_product_fields</item>
 		<item for="install">fn_tspsc_install_profile_fields</item>
