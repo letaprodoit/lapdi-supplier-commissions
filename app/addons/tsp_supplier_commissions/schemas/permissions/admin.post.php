@@ -14,13 +14,11 @@
 
 if ( !defined('BOOTSTRAP') ) { die('Access denied'); }
 
-$schema = array();
-
 $schema['supplier_commissions'] = array (
 	'permissions' => 'manage_supplier_commissions',
 );
 
-$schema['tools']['modes']['update_status']['param_permissions']['table_names']['addon_tsp_supplier_commissions'] = 'manage_supplier_commissions';
+$schema['tools']['modes']['update_status']['param_permissions']['table']['addon_tsp_supplier_commissions'] = 'manage_supplier_commissions';
 
 $auth = & $_SESSION['auth'];
 $supplier_id = $auth['company_id'];
@@ -38,8 +36,8 @@ if (!empty($supplier_id))
 		'permissions' => 'manage_supplier_commissions',
 	);
 	
-	$schema['tools']['modes']['update_status']['param_permissions']['table_names']['tags'] = 'manage_supplier_commissions';
-	$schema['tools']['modes']['update_status']['param_permissions']['table_names']['product_tabs'] = 'manage_supplier_commissions';
+	$schema['tools']['modes']['update_status']['param_permissions']['table']['tags'] = 'manage_supplier_commissions';
+	$schema['tools']['modes']['update_status']['param_permissions']['table']['product_tabs'] = 'manage_supplier_commissions';
 }//endif
 
 return $schema;
